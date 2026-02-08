@@ -147,7 +147,7 @@ const names = [
     "Fernando", "Beatriz", "Paulo", "Rafael", "Bruno", "Diego", "Vinícius", 
     "Ricardo", "Gustavo", "Henrique", "Eduardo", "Tiago", "Rodrigo"
 ];
-const plans = ["WHEY-PROTEIN", "CREATINA", "DARK-WHEY"];
+const plans = ["WHEY-PROTEIN", "CREATINA", "PRÉ-WORKOUT"];
 
 function generateNotification() {
     const name = names[Math.floor(Math.random() * names.length)];
@@ -173,7 +173,7 @@ function generateNotification() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(generateNotification, Math.random() * (10000 - 3000) + 3000);
+    setTimeout(generateNotification, Math.random() * (10000) + 3000);
     setInterval(generateNotification, 20000);
 });
 
@@ -206,4 +206,78 @@ document.addEventListener("DOMContentLoaded", () => {
     viewerCountElement.textContent = currentViewerCount;
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const video = document.getElementById("hero-video");
+    if (!video) {
+        return;
+    }
+
+    const toggleBtn = document.querySelector('.video-btn[data-action="toggle"]');
+    const rateBtns = document.querySelectorAll('.video-btn[data-action="rate"]');
+
+    const setActiveRate = (rate) => {
+        rateBtns.forEach((btn) => {
+            const btnRate = Number(btn.dataset.rate);
+            btn.classList.toggle("is-active", btnRate === rate);
+        });
+    };
+
+    setActiveRate(1);
+
+    const tryPlay = () => {
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.then === "function") {
+            playPromise
+                .then(() => {
+                    if (toggleBtn) {
+                        toggleBtn.textContent = "Pause";
+                    }
+                })
+                .catch(() => {
+                    if (toggleBtn) {
+                        toggleBtn.textContent = "Play";
+                    }
+                });
+        }
+    };
+
+    tryPlay();
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            if (video.paused) {
+                video.play()
+                    .then(() => {
+                        toggleBtn.textContent = "Pause";
+                    })
+                    .catch(() => {
+                        toggleBtn.textContent = "Play";
+                    });
+            } else {
+                video.pause();
+                toggleBtn.textContent = "Play";
+            }
+        });
+    }
+
+    rateBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const rate = Number(btn.dataset.rate) || 1;
+            video.playbackRate = rate;
+            setActiveRate(rate);
+        });
+    });
+
+    video.addEventListener("play", () => {
+        if (toggleBtn) {
+            toggleBtn.textContent = "Pause";
+        }
+    });
+
+    video.addEventListener("pause", () => {
+        if (toggleBtn) {
+            toggleBtn.textContent = "Play";
+        }
+    });
+});
 

@@ -37,20 +37,32 @@
             <span class="highlight-txt">RESULTADOS DE VERDADE</span> 
         </h1>
 
-        <!-- Video Container 
+        <!-- Video Container -->
         <div class="video-container">
-             adicione o codigo JS do vturb abaixo 
-            <div id="" style="position: relative; width: 100%; padding: 56.25% 0 0;"> <img id="thumb_67e975bb950b6b518cf66ce6" src="images/zoomax.png" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block;" alt="thumbnail"> <div id="backdrop_67e975bb950b6b518cf66ce6" style=" -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); position: absolute; top: 0; height: 100%; width: 100%; "></div> </div> <script type="text/javascript" id="scr_67e975bb950b6b518cf66ce6"> var s=document.createElement("script"); s.src="", s.async=!0,document.head.appendChild(s); </script>
-            <style>
-                .elementor-element:has(#smartplayer) {
-                    width: 100%;
-                }
-            </style>
+            <div class="video-shell">
+                <video
+                    id="hero-video"
+                    class="hero-video"
+                    autoplay
+                    muted
+                    playsinline
+                    preload="metadata"
+                    poster="images/zoomax.png"
+                >
+                    <source src="images/video.mp4" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video>
+                <div class="video-controls" aria-label="Controles do vídeo">
+                    <button class="video-btn" type="button" data-action="toggle">Pause</button>
+                    <button class="video-btn is-active" type="button" data-action="rate" data-rate="1">1x</button>
+                    <button class="video-btn" type="button" data-action="rate" data-rate="2">2x</button>
+                </div>
+            </div>
         </div>
-         adicione o codigo JS do vturb acima 
+          
         <div class="live-viewers">
             <span id="viewer-count" class="highlight-txt">0</span> pessoas estão assistindo agora!
-        </div> --> 
+        </div>  
         <!-- Botão para a Seção -->
          <div>
             <a href="#pricing" class="btn-video">QUERO OS SUPLEMENTOS!</a>
@@ -382,6 +394,5 @@
 </body>
 <!-- Mirrored from GAAKxit.netlify.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Feb 2026 23:21:45 GMT -->
 </html>
-
 
 
