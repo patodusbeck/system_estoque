@@ -213,6 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const toggleBtn = document.querySelector('.video-btn[data-action="toggle"]');
+    const muteBtn = document.querySelector('.video-btn[data-action="mute"]');
     const rateBtns = document.querySelectorAll('.video-btn[data-action="rate"]');
 
     const setActiveRate = (rate) => {
@@ -224,6 +225,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setActiveRate(1);
 
+    const setMuteLabel = () => {
+        if (!muteBtn) {
+            return;
+        }
+        muteBtn.textContent = video.muted ? "Unmute" : "Mute";
+    };
+
     const tryPlay = () => {
         const playPromise = video.play();
         if (playPromise && typeof playPromise.then === "function") {
@@ -232,15 +240,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (toggleBtn) {
                         toggleBtn.textContent = "Pause";
                     }
+                    setMuteLabel();
                 })
                 .catch(() => {
                     if (toggleBtn) {
                         toggleBtn.textContent = "Play";
                     }
+                    setMuteLabel();
                 });
         }
     };
 
+    video.muted = false;
     tryPlay();
 
     if (toggleBtn) {
@@ -256,6 +267,16 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 video.pause();
                 toggleBtn.textContent = "Play";
+            }
+        });
+    }
+
+    if (muteBtn) {
+        muteBtn.addEventListener("click", () => {
+            video.muted = !video.muted;
+            setMuteLabel();
+            if (video.muted === false && video.paused) {
+                video.play().catch(() => {});
             }
         });
     }
@@ -279,5 +300,8 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleBtn.textContent = "Play";
         }
     });
+
+    video.addEventListener("volumechange", setMuteLabel);
+    setMuteLabel();
 });
 

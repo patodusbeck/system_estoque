@@ -44,16 +44,18 @@
                     id="hero-video"
                     class="hero-video"
                     autoplay
-                    muted
+                    loop
                     playsinline
                     preload="metadata"
                     poster="images/zoomax.png"
                 >
+                    <source src="images/video.webm" type="video/webm">
                     <source src="images/video.mp4" type="video/mp4">
                     Seu navegador não suporta o elemento de vídeo.
                 </video>
                 <div class="video-controls" aria-label="Controles do vídeo">
                     <button class="video-btn" type="button" data-action="toggle">Pause</button>
+                    <button class="video-btn" type="button" data-action="mute">Mute</button>
                     <button class="video-btn is-active" type="button" data-action="rate" data-rate="1">1x</button>
                     <button class="video-btn" type="button" data-action="rate" data-rate="2">2x</button>
                 </div>
@@ -394,5 +396,3 @@
 </body>
 <!-- Mirrored from GAAKxit.netlify.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Feb 2026 23:21:45 GMT -->
 </html>
-
-
