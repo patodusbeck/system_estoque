@@ -121,6 +121,8 @@ body {
     border-radius: 10px;
     box-shadow: 0px 0px 20px 10px rgba(255, 0, 0, 0.8); /* Brilho aumentado */
     background: #000;
+    --video-scale: 1.65;
+    --video-pos-y: 70%;
 }
 
 .video-shell {
@@ -134,7 +136,9 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center;
+    object-position: 50% var(--video-pos-y);
+    transform: scale(var(--video-scale));
+    transform-origin: center;
     display: block;
 }
 
@@ -149,6 +153,13 @@ body {
     gap: 10px;
     z-index: 2;
     pointer-events: auto;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.video-controls.is-hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .video-btn {

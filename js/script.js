@@ -212,9 +212,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const controls = document.querySelector(".video-controls");
     const toggleBtn = document.querySelector('.video-btn[data-action="toggle"]');
     const muteBtn = document.querySelector('.video-btn[data-action="mute"]');
     const rateBtns = document.querySelectorAll('.video-btn[data-action="rate"]');
+    let hideControlsTimer;
 
     const setActiveRate = (rate) => {
         rateBtns.forEach((btn) => {
@@ -241,14 +243,33 @@ document.addEventListener("DOMContentLoaded", () => {
                         toggleBtn.textContent = "Pause";
                     }
                     setMuteLabel();
+                    scheduleHideControls();
                 })
                 .catch(() => {
                     if (toggleBtn) {
                         toggleBtn.textContent = "Play";
                     }
                     setMuteLabel();
+                    scheduleHideControls();
                 });
         }
+    };
+
+    const showControls = () => {
+        if (!controls) {
+            return;
+        }
+        controls.classList.remove("is-hidden");
+    };
+
+    const scheduleHideControls = () => {
+        if (!controls) {
+            return;
+        }
+        clearTimeout(hideControlsTimer);
+        hideControlsTimer = setTimeout(() => {
+            controls.classList.add("is-hidden");
+        }, 1500);
     };
 
     video.muted = false;
@@ -268,6 +289,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 video.pause();
                 toggleBtn.textContent = "Play";
             }
+            showControls();
+            scheduleHideControls();
         });
     }
 
@@ -278,6 +301,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (video.muted === false && video.paused) {
                 video.play().catch(() => {});
             }
+            showControls();
+            scheduleHideControls();
         });
     }
 
@@ -286,7 +311,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const rate = Number(btn.dataset.rate) || 1;
             video.playbackRate = rate;
             setActiveRate(rate);
+            showControls();
+            scheduleHideControls();
         });
+    });
+
+    video.addEventListener("mousemove", () => {
+        showControls();
+        scheduleHideControls();
+    });
+
+    video.addEventListener("click", () => {
+        showControls();
+        scheduleHideControls();
     });
 
     video.addEventListener("play", () => {
@@ -303,5 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     video.addEventListener("volumechange", setMuteLabel);
     setMuteLabel();
+    scheduleHideControls();
 });
 
