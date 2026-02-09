@@ -143,7 +143,7 @@ var swiper = new Swiper('.swiper-container', {
 });
 
 const names = [
-    "Matheus", "Carlos", "Ana", "João", "Maria", "Lucas", "Gabriela", 
+    "Matheus", "Carlos Eduardo", "Maria Eduarda", "João Paulo", "Lucas", "Gabriela", 
     "Fernando", "Beatriz", "Paulo", "Rafael", "Bruno", "Diego", "Vinícius", 
     "Ricardo", "Gustavo", "Henrique", "Eduardo", "Tiago", "Rodrigo"
 ];
@@ -173,8 +173,8 @@ function generateNotification() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(generateNotification, Math.random() * (10000) + 3000);
-    setInterval(generateNotification, 20000);
+    setTimeout(generateNotification, Math.random() * (120000) + 3000);
+    setInterval(generateNotification, 120000);
 });
 
 
