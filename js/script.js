@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1500);
     };
 
-    video.muted = false;
+    video.muted = true;
     tryPlay();
 
     if (toggleBtn) {
