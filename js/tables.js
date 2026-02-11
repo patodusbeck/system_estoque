@@ -411,9 +411,16 @@ class DataTable {
     /**
      * Recarrega dados do DOM
      */
-    reload() {
+    reload(options = {}) {
+        const { preservePage = false } = options;
+        const previousPage = this.currentPage;
         this.extractData();
-        this.currentPage = 1;
+        if (preservePage) {
+            const totalPages = Math.max(1, Math.ceil(this.filteredData.length / this.options.itemsPerPage));
+            this.currentPage = Math.min(previousPage, totalPages);
+        } else {
+            this.currentPage = 1;
+        }
         this.render();
     }
 }

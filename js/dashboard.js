@@ -9,7 +9,12 @@ const navItems = document.querySelectorAll('.nav-item[data-section]');
 const sections = document.querySelectorAll('.content-section');
 const pageTitle = document.getElementById('pageTitle');
 
-// ========== NAVEGAÇÃO ==========
+const POLLING_INTERVAL_MS = 5000;
+const TABLE_UPDATE_COOLDOWN_MS = 4000;
+let lastUserInteractionAt = Date.now();
+const tableDataSignatureBySection = {};
+
+// ========== NAVEGACAO ==========
 
 function navigateToSection(sectionId) {
     navItems.forEach(item => item.classList.remove('active'));
@@ -21,17 +26,16 @@ function navigateToSection(sectionId) {
     if (targetSection) targetSection.classList.add('active');
 
     const titles = {
-        'dashboard': 'Dashboard',
-        'clientes': 'Clientes',
-        'produtos': 'Produtos',
-        'vendas': 'Vendas'
+        dashboard: 'Dashboard',
+        clientes: 'Clientes',
+        produtos: 'Produtos',
+        vendas: 'Vendas'
     };
     pageTitle.textContent = titles[sectionId] || 'Dashboard';
-    closeSidebar(); // Mobile
+    closeSidebar();
 
-    // Se for uma seção de tabela, carregar dados
     if (sectionId !== 'dashboard') {
-        loadTableData(sectionId);
+        loadTableData(sectionId, { preservePage: true, preserveScroll: true });
     } else {
         loadDashboardStats();
     }
@@ -46,9 +50,11 @@ function toggleSidebar() {
             overlay.className = 'sidebar-overlay active';
             overlay.addEventListener('click', closeSidebar);
             document.body.appendChild(overlay);
-        } else { overlay.classList.add('active'); }
-    } else {
-        if (overlay) overlay.classList.remove('active');
+        } else {
+            overlay.classList.add('active');
+        }
+    } else if (overlay) {
+        overlay.classList.remove('active');
     }
 }
 
@@ -60,14 +66,25 @@ function closeSidebar() {
 
 // ========== CARREGAMENTO DE DADOS ==========
 
-// Mapeamento Seção -> Endpoint API
 const SECTION_ENTITY_MAP = {
-    'clientes': 'clients',
-    'produtos': 'products',
-    'vendas': 'sales'
+    clientes: 'clients',
+    produtos: 'products',
+    vendas: 'sales'
 };
 
-async function loadTableData(sectionId) {
+function buildTableSignature(sectionId, data) {
+    if (!Array.isArray(data)) return '';
+    if (sectionId === 'clientes') {
+        return JSON.stringify(data.map((item) => [item._id, item.nome, item.telefone, item.updatedAt]));
+    }
+    if (sectionId === 'produtos') {
+        return JSON.stringify(data.map((item) => [item._id, item.nome, item.preco, item.estoque, item.updatedAt]));
+    }
+    return JSON.stringify(data.map((item) => [item._id, item.total, item.status, item.data, item.updatedAt]));
+}
+
+async function loadTableData(sectionId, options = {}) {
+    const { silent = false, preservePage = false, preserveScroll = false } = options;
     const entity = SECTION_ENTITY_MAP[sectionId];
     if (!entity) return;
 
@@ -75,24 +92,39 @@ async function loadTableData(sectionId) {
     const tbody = document.querySelector(`#${tableId} tbody`);
     if (!tbody) return;
 
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Carregando...</td></tr>';
+    const previousScrollY = preserveScroll ? window.scrollY : 0;
+    if (!silent) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Carregando...</td></tr>';
+    }
 
     try {
         const data = await window.API.get(entity);
+        const nextSignature = buildTableSignature(sectionId, data);
+        if (silent && tableDataSignatureBySection[sectionId] === nextSignature) {
+            return;
+        }
+
+        tableDataSignatureBySection[sectionId] = nextSignature;
         renderTableRows(sectionId, data);
 
-        // Atualiza instância do DataTable se existir
         if (window.tables && window.tables[sectionId]) {
-            window.tables[sectionId].reload();
+            window.tables[sectionId].reload({ preservePage });
+        }
+
+        if (preserveScroll) {
+            window.scrollTo(0, previousScrollY);
         }
     } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="5" style="color:red">Erro: ${error.message}</td></tr>`;
+        if (!silent) {
+            tbody.innerHTML = `<tr><td colspan="5" style="color:red">Erro: ${error.message}</td></tr>`;
+        }
     }
 }
 
 function renderTableRows(sectionId, data) {
     const tableId = `${sectionId}Table`;
     const tbody = document.querySelector(`#${tableId} tbody`);
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     if (data.length === 0) {
@@ -126,9 +158,9 @@ function renderTableRows(sectionId, data) {
         } else if (sectionId === 'vendas') {
             const dateObj = new Date(item.data);
             const date = dateObj.toLocaleDateString('pt-BR');
-            const time = dateObj.toLocaleTimeString('pt-BR'); // Padrão inclui segundos
+            const time = dateObj.toLocaleTimeString('pt-BR');
             const statusClass = item.status === 'concluida' ? 'success' : item.status === 'cancelada' ? 'danger' : 'warning';
-            const clientName = item.cliente ? item.cliente.nome : (item.clienteNome || 'Balcão');
+            const clientName = item.cliente ? item.cliente.nome : (item.clienteNome || 'Balcao');
 
             row = `
                 <td>${item._id.substr(-6)}</td>
@@ -153,7 +185,6 @@ async function loadDashboardStats() {
             window.API.get('sales')
         ]);
 
-        // Atualizar cards de estatísticas
         const cards = document.querySelectorAll('.stat-card');
         if (cards.length >= 4) {
             cards[0].querySelector('.stat-number').textContent = clients.length;
@@ -167,17 +198,15 @@ async function loadDashboardStats() {
             cards[3].querySelector('.stat-number').textContent = `R$ ${totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         }
 
-        // --- CÁLCULO DE CRESCIMENTO ---
         const now = new Date();
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
-        
+
         const lastMonthDate = new Date(now);
         lastMonthDate.setMonth(now.getMonth() - 1);
         const lastMonth = lastMonthDate.getMonth();
         const lastMonthYear = lastMonthDate.getFullYear();
 
-        // Filtros de Vendas
         const salesThisMonth = sales.filter(s => {
             const d = new Date(s.data);
             return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
@@ -187,7 +216,6 @@ async function loadDashboardStats() {
             return d.getMonth() === lastMonth && d.getFullYear() === lastMonthYear;
         });
 
-        // Filtros de Clientes
         const clientsThisMonth = clients.filter(c => {
             const d = new Date(c.createdAt || c.data);
             return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
@@ -197,30 +225,21 @@ async function loadDashboardStats() {
             return d.getMonth() === lastMonth && d.getFullYear() === lastMonthYear;
         });
 
-        // 1. Vendas vs Mês Anterior
         updateGrowthIndicator('vendas', salesThisMonth.length, salesLastMonth.length);
-
-        // 2. Novos Clientes (comparação de novos cadastros)
         updateGrowthIndicator('clientes', clientsThisMonth.length, clientsLastMonth.length);
 
-        // 3. Ticket Médio
         const ticketThisMonth = salesThisMonth.length ? (salesThisMonth.reduce((acc, s) => acc + (s.total || 0), 0) / salesThisMonth.length) : 0;
         const ticketLastMonth = salesLastMonth.length ? (salesLastMonth.reduce((acc, s) => acc + (s.total || 0), 0) / salesLastMonth.length) : 0;
         updateGrowthIndicator('ticket', ticketThisMonth, ticketLastMonth);
 
-        // 4. Faturamento Total
         const revThisMonth = salesThisMonth.reduce((acc, s) => acc + (s.total || 0), 0);
         const revLastMonth = salesLastMonth.reduce((acc, s) => acc + (s.total || 0), 0);
         updateGrowthIndicator('faturamento', revThisMonth, revLastMonth);
-
     } catch (e) {
-        console.error("Erro ao carregar stats", e);
+        console.error('Erro ao carregar stats', e);
     }
 }
 
-/**
- * Atualiza visualmente um indicador de crescimento
- */
 function updateGrowthIndicator(key, current, last) {
     const valueEl = document.getElementById(`${key}GrowthValue`);
     const itemEl = document.getElementById(`${key}GrowthItem`);
@@ -230,7 +249,7 @@ function updateGrowthIndicator(key, current, last) {
     if (last > 0) {
         growth = ((current - last) / last) * 100;
     } else if (current > 0) {
-        growth = 100; // Se não tinha nada e agora tem, é 100%
+        growth = 100;
     }
 
     const isPositive = growth >= 0;
@@ -244,7 +263,6 @@ function updateGrowthIndicator(key, current, last) {
 
 // ========== INITIALIZATION ==========
 
-// Listeners
 if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
 
 navItems.forEach(item => {
@@ -261,25 +279,50 @@ window.addEventListener('hashchange', () => {
     if (hash && document.getElementById(hash)) navigateToSection(hash);
 });
 
-// Listener global para recarregar dados quando houver mudança (CRUD)
+['touchstart', 'touchmove', 'scroll', 'mousedown', 'keydown'].forEach((eventName) => {
+    window.addEventListener(eventName, () => {
+        lastUserInteractionAt = Date.now();
+    }, { passive: true });
+});
+
 document.addEventListener('dataChanged', () => {
-    // Recarrega a seção atual
     const activeSection = document.querySelector('.content-section.active');
-    if (activeSection) {
-        if (activeSection.id === 'dashboard') loadDashboardStats();
-        else loadTableData(activeSection.id);
+    if (!activeSection) return;
+    if (activeSection.id === 'dashboard') {
+        loadDashboardStats();
+    } else {
+        loadTableData(activeSection.id, { preservePage: true, preserveScroll: true });
     }
 });
+
+async function runSmartPolling() {
+    if (document.hidden) return;
+
+    const activeSection = document.querySelector('.content-section.active');
+    if (!activeSection) return;
+
+    if (activeSection.id === 'dashboard') {
+        loadDashboardStats();
+        return;
+    }
+
+    const isTableSection = SECTION_ENTITY_MAP[activeSection.id];
+    if (!isTableSection) return;
+
+    const isUserInteracting = Date.now() - lastUserInteractionAt < TABLE_UPDATE_COOLDOWN_MS;
+    if (isUserInteracting) return;
+
+    await loadTableData(activeSection.id, {
+        silent: true,
+        preservePage: true,
+        preserveScroll: true
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const hash = window.location.hash.replace('#', '') || 'dashboard';
     if (document.getElementById(hash)) navigateToSection(hash);
-
-    // ========== SMART POLLING (TEMPO REAL) ==========
-    // Atualiza o dashboard automaticamente a cada 5 segundos
-    setInterval(() => {
-        // Dispara o evento global de mudança de dados
-        document.dispatchEvent(new Event('dataChanged'));
-        console.log('[POLLING] Sincronizando dados...');
-    }, 5000);
+    setInterval(runSmartPolling, POLLING_INTERVAL_MS);
 });
+
+window.navigateToSection = navigateToSection;

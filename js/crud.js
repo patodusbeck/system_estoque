@@ -23,16 +23,8 @@ const FORM_CONFIG = {
             { name: 'descricao', label: 'Descrição', type: 'textarea', required: false, placeholder: 'Descrição do produto' },
             { name: 'preco', label: 'Preço (R$)', type: 'number', required: true, placeholder: '0.00', step: '0.01', min: '0' },
             { name: 'img', label: 'Foto (URL ou caminho)', type: 'text', required: false, placeholder: 'images/produto.jpg' },
+            { name: 'imagesUpload', label: 'Fotos da Galeria', type: 'file', required: false, accept: 'image/*', multiple: true },
             { name: 'estoque', label: 'Estoque', type: 'number', required: true, placeholder: '0', min: '0' },
-            {
-                name: 'categoria', label: 'Categoria', type: 'select', required: true, options: [
-                    { value: '', label: 'Selecione...' },
-                    { value: 'espetinho', label: 'Espetinhos' },
-                    { value: 'bebida', label: 'Bebidas' },
-                    { value: 'acompanhamento', label: 'Acompanhamentos' },
-                    { value: 'outro', label: 'Outros' }
-                ]
-            }
         ]
     },
     sale: { // Alterado de 'venda' para 'sale'
@@ -234,6 +226,13 @@ async function generateFormFields(fields) {
             case 'textarea':
                 inputHTML = `<textarea id="${field.name}" name="${field.name}" rows="3" ${requiredAttr}></textarea>`;
                 break;
+            case 'file':
+                inputHTML = `
+                    <input type="file" id="${field.name}" name="${field.name}" ${field.accept ? `accept="${field.accept}"` : ''} ${field.multiple ? 'multiple' : ''} ${requiredAttr}>
+                    <small class="file-hint">Selecione fotos da galeria (JPG, PNG, WEBP).</small>
+                    <div class="image-preview-grid" id="${field.name}-preview"></div>
+                `;
+                break;
             case 'select':
                 let options = [];
                 if (Array.isArray(field.options)) {
@@ -273,6 +272,7 @@ async function generateFormFields(fields) {
         }
         html += `<div class="form-group"><label>${field.label}</label>${inputHTML}</div>`;
     }
+    setTimeout(bindProductImageUploadPreview, 0);
     return html;
 }
 
@@ -324,6 +324,12 @@ function fillFormData(item, fields) {
                     }
                 });
             }
+        } else if (field.type === 'file') {
+            const existingImages = Array.isArray(item.images) && item.images.length > 0
+                ? item.images
+                : (item.img ? [item.img] : []);
+            el.dataset.existingImages = JSON.stringify(existingImages);
+            renderImagePreview(`${field.name}-preview`, existingImages);
         } else {
             // Campos normais
             // Se for select de objeto, pega o ID
@@ -340,7 +346,11 @@ async function handleSubmit(event) {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries()); // Básico
+    const data = {};
+    for (const [key, value] of formData.entries()) {
+        if (value instanceof File) continue;
+        data[key] = value;
+    }
 
     // Processar Multiselect manualmente
     if (currentEntity === 'sale') {
@@ -354,6 +364,10 @@ async function handleSubmit(event) {
             });
         });
         data.produtos = selected;
+    }
+    
+    if (currentEntity === 'product') {
+        await processProductImages(form, data);
     }
 
     const config = FORM_CONFIG[currentEntity];
@@ -373,6 +387,75 @@ async function handleSubmit(event) {
         console.error(error);
         showNotification('Erro ao salvar: ' + error.message, 'error');
     }
+}
+
+function bindProductImageUploadPreview() {
+    const fileInput = document.getElementById('imagesUpload');
+    if (!fileInput || fileInput.dataset.bound === 'true') return;
+
+    fileInput.dataset.bound = 'true';
+    fileInput.addEventListener('change', async (event) => {
+        const files = Array.from(event.target.files || []);
+        const previews = await Promise.all(files.slice(0, 5).map(readFileAsDataUrl));
+        renderImagePreview('imagesUpload-preview', previews);
+    });
+}
+
+async function processProductImages(form, data) {
+    const fileInput = form.querySelector('#imagesUpload');
+    if (!fileInput) return;
+
+    const files = Array.from(fileInput.files || []);
+    let nextImages = [];
+
+    if (files.length > 0) {
+        nextImages = await Promise.all(files.slice(0, 5).map(readFileAsDataUrl));
+    } else {
+        const existingImagesRaw = fileInput.dataset.existingImages;
+        if (existingImagesRaw) {
+            try {
+                const parsed = JSON.parse(existingImagesRaw);
+                if (Array.isArray(parsed)) nextImages = parsed;
+            } catch (error) {
+                console.warn('Não foi possível ler imagens existentes do produto', error);
+            }
+        }
+    }
+
+    if (nextImages.length > 0) {
+        data.images = nextImages;
+        if (!data.img) data.img = nextImages[0];
+    } else if (data.img) {
+        data.images = [data.img];
+    }
+
+    delete data.imagesUpload;
+}
+
+function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+function renderImagePreview(targetId, images) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    const validImages = (images || []).filter((img) => typeof img === 'string' && img.trim() !== '');
+    if (validImages.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = validImages.slice(0, 5).map((img) => `
+        <div class="image-preview-item">
+            <img src="${img}" alt="Prévia da imagem do produto" loading="lazy">
+        </div>
+    `).join('');
 }
 
 // ========== NOTIFICAÇÕES ==========
