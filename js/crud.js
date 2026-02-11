@@ -66,6 +66,9 @@ const ENTITY_MAP = {
 let currentEntity = null; // 'client', 'product', 'sale'
 let currentMode = 'create';
 let currentEditId = null;
+const MAX_PRODUCT_IMAGES = 5;
+const MAX_IMAGE_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB por imagem
+const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 // ========== API SERVICE ==========
 const API = {
@@ -365,7 +368,7 @@ async function handleSubmit(event) {
         });
         data.produtos = selected;
     }
-    
+
     if (currentEntity === 'product') {
         await processProductImages(form, data);
     }
@@ -396,7 +399,11 @@ function bindProductImageUploadPreview() {
     fileInput.dataset.bound = 'true';
     fileInput.addEventListener('change', async (event) => {
         const files = Array.from(event.target.files || []);
-        const previews = await Promise.all(files.slice(0, 5).map(readFileAsDataUrl));
+        const { acceptedFiles, warnings } = sanitizeProductImageFiles(files);
+        if (warnings.length > 0) {
+            showNotification(warnings[0], 'warning');
+        }
+        const previews = await Promise.all(acceptedFiles.map(readFileAsDataUrl));
         renderImagePreview('imagesUpload-preview', previews);
     });
 }
@@ -409,7 +416,14 @@ async function processProductImages(form, data) {
     let nextImages = [];
 
     if (files.length > 0) {
-        nextImages = await Promise.all(files.slice(0, 5).map(readFileAsDataUrl));
+        const { acceptedFiles, warnings } = sanitizeProductImageFiles(files);
+        if (warnings.length > 0) {
+            showNotification(warnings[0], 'warning');
+        }
+        if (acceptedFiles.length === 0) {
+            throw new Error('Nenhuma imagem valida foi selecionada (use JPG, PNG ou WEBP ate 2MB).');
+        }
+        nextImages = await Promise.all(acceptedFiles.map(readFileAsDataUrl));
     } else {
         const existingImagesRaw = fileInput.dataset.existingImages;
         if (existingImagesRaw) {
@@ -432,6 +446,34 @@ async function processProductImages(form, data) {
     delete data.imagesUpload;
 }
 
+function sanitizeProductImageFiles(files) {
+    const warnings = [];
+    const acceptedFiles = [];
+
+    if (!Array.isArray(files) || files.length === 0) {
+        return { acceptedFiles, warnings };
+    }
+
+    const limitedFiles = files.slice(0, MAX_PRODUCT_IMAGES);
+    if (files.length > MAX_PRODUCT_IMAGES) {
+        warnings.push(`Limite de ${MAX_PRODUCT_IMAGES} imagens por produto. Somente as primeiras foram consideradas.`);
+    }
+
+    limitedFiles.forEach((file) => {
+        if (!ALLOWED_IMAGE_MIME_TYPES.includes(file.type)) {
+            warnings.push(`Arquivo "${file.name}" ignorado: formato invalido. Use JPG, PNG ou WEBP.`);
+            return;
+        }
+        if (file.size > MAX_IMAGE_FILE_SIZE_BYTES) {
+            warnings.push(`Arquivo "${file.name}" ignorado: tamanho maximo de 2MB por imagem.`);
+            return;
+        }
+        acceptedFiles.push(file);
+    });
+
+    return { acceptedFiles, warnings };
+}
+
 function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -451,7 +493,7 @@ function renderImagePreview(targetId, images) {
         return;
     }
 
-    container.innerHTML = validImages.slice(0, 5).map((img) => `
+    container.innerHTML = validImages.slice(0, MAX_PRODUCT_IMAGES).map((img) => `
         <div class="image-preview-item">
             <img src="${img}" alt="Prévia da imagem do produto" loading="lazy">
         </div>

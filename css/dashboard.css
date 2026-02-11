@@ -115,6 +115,7 @@ body {
     flex: 1;
     min-height: 100vh;
     background: var(--branco);
+    overflow-x: hidden;
 }
 
 /* HEADER DO CONTEÚDO */
@@ -1030,21 +1031,103 @@ body {
 
     .data-table {
         display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        overflow: visible;
+    }
+
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table tbody {
+        display: grid;
+        gap: 10px;
+    }
+
+    .data-table tbody tr {
+        display: block;
+        background: var(--cinza-bg);
+        border: 1px solid var(--cinza-borda);
+        border-radius: 10px;
+        padding: 10px 12px;
+    }
+
+    .data-table tbody td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        padding: 8px 0;
+        border-bottom: 1px dashed #d8d8d8;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .data-table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .data-table tbody td::before {
+        content: attr(data-label);
+        color: var(--preto);
+        font-weight: 600;
+        text-align: left;
+        flex: 0 0 42%;
+        max-width: 42%;
+    }
+
+    .data-table tbody td.actions-cell {
+        align-items: center;
+    }
+
+    .data-table tbody td.actions-cell::before {
+        padding-top: 6px;
+    }
+
+    .data-table tbody td.actions-cell button {
+        margin-left: 6px;
+    }
+
+    .data-table tbody td.status-cell {
+        align-items: center;
+    }
+
+    .data-table tbody td.status-cell .badge {
+        margin-left: auto;
     }
 
     .table-controls {
+        width: 100%;
+        align-items: stretch;
         min-height: 96px;
+    }
+
+    .search-wrapper,
+    .filter-wrapper,
+    .per-page-wrapper {
+        width: 100%;
+    }
+
+    .table-filter,
+    .per-page-select {
+        width: 100%;
     }
 
     .table-pagination {
         min-height: 90px;
+        width: 100%;
     }
 
     .stat-number {
         min-width: 100px;
         display: inline-block;
+    }
+}
+
+@media (max-width: 768px) {
+    body.sidebar-open {
+        overflow: hidden;
     }
 }
 

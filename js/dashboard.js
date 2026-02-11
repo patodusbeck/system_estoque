@@ -45,6 +45,7 @@ function toggleSidebar() {
     sidebar.classList.toggle('open');
     let overlay = document.querySelector('.sidebar-overlay');
     if (sidebar.classList.contains('open')) {
+        document.body.classList.add('sidebar-open');
         if (!overlay) {
             overlay = document.createElement('div');
             overlay.className = 'sidebar-overlay active';
@@ -60,6 +61,7 @@ function toggleSidebar() {
 
 function closeSidebar() {
     sidebar.classList.remove('open');
+    document.body.classList.remove('sidebar-open');
     const overlay = document.querySelector('.sidebar-overlay');
     if (overlay) overlay.classList.remove('active');
 }
@@ -136,21 +138,21 @@ function renderTableRows(sectionId, data) {
         let row = '';
         if (sectionId === 'clientes') {
             row = `
-                <td>${item._id.substr(-6)}</td>
-                <td>${item.nome}</td>
-                <td>${item.telefone}</td>
-                <td>
+                <td data-label="ID">${item._id.substr(-6)}</td>
+                <td data-label="Nome">${item.nome}</td>
+                <td data-label="Telefone">${item.telefone}</td>
+                <td data-label="Ações" class="actions-cell">
                     <button class="btn-icon" onclick="editItem('client', '${item._id}')"><i class="fa-solid fa-edit"></i></button>
                     <button class="btn-icon btn-danger" onclick="deleteItem('client', '${item._id}')"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
         } else if (sectionId === 'produtos') {
             row = `
-                <td>${item._id.substr(-6)}</td>
-                <td>${item.nome}</td>
-                <td>R$ ${item.preco.toFixed(2)}</td>
-                <td>${item.estoque}</td>
-                <td>
+                <td data-label="ID">${item._id.substr(-6)}</td>
+                <td data-label="Produto">${item.nome}</td>
+                <td data-label="Preço">R$ ${item.preco.toFixed(2)}</td>
+                <td data-label="Estoque">${item.estoque}</td>
+                <td data-label="Ações" class="actions-cell">
                     <button class="btn-icon" onclick="editItem('product', '${item._id}')"><i class="fa-solid fa-edit"></i></button>
                     <button class="btn-icon btn-danger" onclick="deleteItem('product', '${item._id}')"><i class="fa-solid fa-trash"></i></button>
                 </td>
@@ -163,11 +165,11 @@ function renderTableRows(sectionId, data) {
             const clientName = item.cliente ? item.cliente.nome : (item.clienteNome || 'Balcao');
 
             row = `
-                <td>${item._id.substr(-6)}</td>
-                <td>${time} - ${date}</td>
-                <td>${clientName}</td>
-                <td>R$ ${item.total.toFixed(2)}</td>
-                <td><span class="badge badge-${statusClass}">${item.status}</span></td>
+                <td data-label="ID">${item._id.substr(-6)}</td>
+                <td data-label="Data">${time} - ${date}</td>
+                <td data-label="Cliente">${clientName}</td>
+                <td data-label="Total">R$ ${item.total.toFixed(2)}</td>
+                <td data-label="Status" class="status-cell"><span class="badge badge-${statusClass}">${item.status}</span></td>
             `;
         }
 
@@ -297,6 +299,7 @@ document.addEventListener('dataChanged', () => {
 
 async function runSmartPolling() {
     if (document.hidden) return;
+    if (sidebar && sidebar.classList.contains('open')) return;
 
     const activeSection = document.querySelector('.content-section.active');
     if (!activeSection) return;
