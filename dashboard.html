@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard • Comercial Matos</title>
+
+    <!-- ⭐ FAVICON -->
+    <link rel="icon" href="images/gaaklogo.png" type="image/png">
+
+    <!-- 🎯 ICONES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- 🎨 CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <!-- 📊 CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="images/gaaklogo.png" alt="Logo Comercial Matos" class="sidebar-logo">
+            <h2>Comercial Matos</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#clientes" class="nav-item" data-section="clientes">
+                <i class="fa-solid fa-users"></i>
+                <span>Clientes</span>
+            </a>
+            <a href="#produtos" class="nav-item" data-section="produtos">
+                <i class="fa-solid fa-box"></i>
+                <span>Produtos</span>
+            </a>
+            <a href="#vendas" class="nav-item" data-section="vendas">
+                <i class="fa-solid fa-shopping-cart"></i>
+                <span>Vendas</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="index.html" class="nav-item">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Voltar ao Site</span>
+            </a>
+            <a href="#" class="nav-item" onclick="auth.logout(); return false;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="content-header">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="header-actions">
+                <span class="user-info" id="userInfo">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span id="userName">Carregando...</span>
+                </span>
+                <button class="btn-logout" onclick="auth.logout()" title="Sair">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- SEÇÕES DE CONTEÚDO -->
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="content-section active">
+            <div class="cards-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #0f7a3a;">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Clientes</h3>
+                        <p class="stat-number">156</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #2196F3;">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Produtos</h3>
+                        <p class="stat-number">48</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #FF9800;">
+                        <i class="fa-solid fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Vendas Hoje</h3>
+                        <p class="stat-number">23</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #4CAF50;">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Faturamento</h3>
+                        <p class="stat-number">R$ 1.250</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRÁFICOS -->
+            <div class="charts-grid">
+                <!-- Gráfico de Vendas por Período -->
+                <div class="content-card chart-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-line"></i> Vendas por Período</h2>
+                        <select id="chartPeriod" class="chart-select">
+                            <option value="week">Última Semana</option>
+                            <option value="month" selected>Último Mês</option>
+                            <option value="year">Último Ano</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Produtos Mais Vendidos -->
+                <div class="content-card chart-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-pie"></i> Produtos Mais Vendidos</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="productsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda linha de gráficos -->
+            <div class="charts-grid">
+                <!-- Gráfico de Faturamento -->
+                <div class="content-card chart-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-dollar-sign"></i> Faturamento Mensal</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Formas de Pagamento -->
+                <div class="content-card chart-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-credit-card"></i> Formas de Pagamento</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="paymentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicadores de Crescimento -->
+            <div class="content-card">
+                <h2><i class="fa-solid fa-arrow-trend-up"></i> Indicadores de Crescimento</h2>
+                <div class="growth-indicators">
+                    <div class="growth-item" id="vendasGrowthItem">
+                        <span class="growth-label">Vendas vs Mês Anterior</span>
+                        <span class="growth-value" id="vendasGrowthValue">--%</span>
+                    </div>
+                    <div class="growth-item" id="clientesGrowthItem">
+                        <span class="growth-label">Novos Clientes</span>
+                        <span class="growth-value" id="clientesGrowthValue">--%</span>
+                    </div>
+                    <div class="growth-item" id="ticketGrowthItem">
+                        <span class="growth-label">Ticket Médio</span>
+                        <span class="growth-value" id="ticketGrowthValue">--%</span>
+                    </div>
+                    <div class="growth-item" id="faturamentoGrowthItem">
+                        <span class="growth-label">Faturamento Total</span>
+                        <span class="growth-value" id="faturamentoGrowthValue">--%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clientes -->
+        <section id="clientes" class="content-section">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Gerenciar Clientes</h2>
+                    <button class="btn-primary" onclick="openModal('cliente')">
+                        <i class="fa-solid fa-plus"></i> Novo Cliente
+                    </button>
+                </div>
+                <table class="data-table" id="clientesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th class="no-sort">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>João Silva</td>
+                            <td>(99) 98765-4321</td>
+                            <td>
+                                <button class="btn-icon" onclick="editItem('cliente', 1)"><i
+                                        class="fa-solid fa-edit"></i></button>
+                                <button class="btn-icon btn-danger" onclick="deleteItem('cliente', 1)"><i
+                                        class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Maria Santos</td>
+                            <td>(99) 91234-5678</td>
+                            <td>
+                                <button class="btn-icon"><i class="fa-solid fa-edit"></i></button>
+                                <button class="btn-icon btn-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Produtos -->
+        <section id="produtos" class="content-section">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Gerenciar Produtos</h2>
+                    <button class="btn-primary" onclick="openModal('produto')">
+                        <i class="fa-solid fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+                <table class="data-table" id="produtosTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Produto</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th class="no-sort">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Espetinho Carne</td>
+                            <td>R$ 10,00</td>
+                            <td>50</td>
+                            <td>
+                                <button class="btn-icon" onclick="editItem('produto', 1)"><i
+                                        class="fa-solid fa-edit"></i></button>
+                                <button class="btn-icon btn-danger" onclick="deleteItem('produto', 1)"><i
+                                        class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Refrigerante Lata</td>
+                            <td>R$ 5,00</td>
+                            <td>120</td>
+                            <td>
+                                <button class="btn-icon"><i class="fa-solid fa-edit"></i></button>
+                                <button class="btn-icon btn-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Vendas -->
+        <section id="vendas" class="content-section">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Histórico de Vendas</h2>
+                    <button class="btn-primary" onclick="openModal('venda')">
+                        <i class="fa-solid fa-plus"></i> Nova Venda
+                    </button>
+                </div>
+                <table class="data-table" id="vendasTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th class="no-sort">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#001</td>
+                            <td>23/01/2026</td>
+                            <td>João Silva</td>
+                            <td>R$ 45,00</td>
+                            <td><span class="badge badge-success">Concluída</span></td>
+                        </tr>
+                        <tr>
+                            <td>#002</td>
+                            <td>23/01/2026</td>
+                            <td>Maria Santos</td>
+                            <td>R$ 32,00</td>
+                            <td><span class="badge badge-warning">Pendente</span></td>
+                        </tr>
+                        <tr>
+                            <td>#003</td>
+                            <td>22/01/2026</td>
+                            <td>Pedro Oliveira</td>
+                            <td>R$ 78,00</td>
+                            <td><span class="badge badge-success">Concluída</span></td>
+                        </tr>
+                        <tr>
+                            <td>#004</td>
+                            <td>22/01/2026</td>
+                            <td>Ana Costa</td>
+                            <td>R$ 25,00</td>
+                            <td><span class="badge badge-success">Concluída</span></td>
+                        </tr>
+                        <tr>
+                            <td>#005</td>
+                            <td>21/01/2026</td>
+                            <td>Carlos Lima</td>
+                            <td>R$ 56,00</td>
+                            <td><span class="badge badge-danger">Cancelada</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/tables.js"></script>
+    <script src="js/crud.js"></script>
+    <script>
+        // Protege a página - redireciona se não autenticado
+        if (!auth.protectPage()) {
+            // Página será redirecionada
+        } else {
+            // Atualiza nome do usuário no header
+            const user = auth.getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.name;
+            }
+        }
+    </script>
+</body>
+
+</html>

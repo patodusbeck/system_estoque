@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • Comercial Matos</title>
+
+    <!-- ⭐ FAVICON -->
+    <link rel="icon" href="images/gaaklogo.png" type="image/png">
+
+    <!-- 🎯 ICONES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- 🎨 CSS EXTERNO -->
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="images/gaaklogo.png" alt="Logo Comercial Matos">
+            <h1>Comercial Matos</h1>
+            <p>Acesse o painel administrativo</p>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <div class="error-message" id="errorMessage">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="errorText">Usuário ou senha incorretos</span>
+            </div>
+
+            <div class="demo-credentials">
+                <strong><i class="fa-solid fa-info-circle"></i> Credenciais de demonstração:</strong>
+                Usuário: <code>admin</code> | Senha: <code>admin@espetaria</code>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" name="username" placeholder="Digite seu usuário"
+                        autocomplete="username" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Digite sua senha"
+                        autocomplete="current-password" required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox" id="remember" name="remember">
+                    Lembrar-me
+                </label>
+                <a href="#">Esqueceu a senha?</a>
+            </div>
+
+            <button type="submit" class="btn-login" id="btnLogin">
+                <span class="spinner"></span>
+                <span class="btn-text">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Entrar
+                </span>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <a href="index.html">
+                <i class="fa-solid fa-arrow-left"></i>
+                Voltar ao site
+            </a>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

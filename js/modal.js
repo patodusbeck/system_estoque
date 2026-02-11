@@ -4,14 +4,35 @@
  */
 
 let productsData = [];
+const productCategoryKeywords = {
+  creatina: 'creatine supplement gym',
+  proteina: 'whey protein supplement',
+  'pre-treino': 'pre workout supplement',
+  aminoacidos: 'bcaa amino acids supplement',
+  hipercalorico: 'mass gainer supplement',
+  vestuario: 'gym sports shirt'
+};
 
 // Load products data
 async function loadProducts() {
   try {
-    const response = await fetch('/data/products.json');
-    productsData = await response.json();
+    const response = await fetch('/api/products', { cache: 'no-store' });
+    if (!response.ok) throw new Error('API unavailable');
+    const apiProducts = await response.json();
+    productsData = apiProducts.map(mapApiProductToStoreProduct);
+    window.productsData = productsData;
   } catch (error) {
-    console.error('Error loading products:', error);
+    console.warn('API products unavailable, using data/products.json fallback');
+    try {
+      const fallbackResponse = await fetch('/data/products.json');
+      const fallbackProducts = await fallbackResponse.json();
+      productsData = fallbackProducts.map(mapJsonProductToStoreProduct);
+      window.productsData = productsData;
+    } catch (fallbackError) {
+      console.error('Error loading products:', fallbackError);
+      productsData = [];
+      window.productsData = productsData;
+    }
   }
 }
 
@@ -33,6 +54,9 @@ function openProductModal(productId) {
   modal.className = 'modal-overlay';
   modal.id = 'product-modal';
 
+  currentSlide = 0;
+  const carouselImages = getCarouselImages(product);
+
   const benefitsHTML = product.benefits.map(benefit => `
     <li>
       <ion-icon name="checkmark-circle"></ion-icon>
@@ -40,13 +64,13 @@ function openProductModal(productId) {
     </li>
   `).join('');
 
-  const imagesHTML = product.images.map((img, index) => `
+  const imagesHTML = carouselImages.map((img, index) => `
     <div class="carousel-slide ${index === 0 ? 'active' : ''}" data-index="${index}">
       <img src="${img}" alt="${product.name}">
     </div>
   `).join('');
 
-  const dotsHTML = product.images.map((_, index) => `
+  const dotsHTML = carouselImages.map((_, index) => `
     <span class="carousel-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></span>
   `).join('');
 
@@ -62,7 +86,7 @@ function openProductModal(productId) {
           <div class="carousel-container">
             ${imagesHTML}
           </div>
-          ${product.images.length > 1 ? `
+          ${carouselImages.length > 1 ? `
             <button class="carousel-btn carousel-prev" onclick="prevSlide()">
               <ion-icon name="chevron-back"></ion-icon>
             </button>
@@ -167,3 +191,83 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') nextSlide();
   if (e.key === 'Escape') closeModal('product-modal');
 });
+
+function getCarouselImages(product) {
+  const localImages = (product.images || []).filter((img) => !img.includes('painelgaak.png'));
+  const webImages = getRandomWebProductImages(product);
+  const mergedImages = [...new Set([...localImages, ...webImages])];
+
+  return mergedImages.length > 0 ? mergedImages : (product.images || []);
+}
+
+function mapApiProductToStoreProduct(product) {
+  const images = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : product.img
+      ? [product.img]
+      : ['images/painelgaak.png'];
+
+  const price = Number(product.preco ?? product.price ?? 0);
+  const oldPrice = Number(product.oldPrice ?? 0) || price;
+  const hasDiscount = oldPrice > price;
+  const discount = hasDiscount
+    ? `${Math.round(((oldPrice - price) / oldPrice) * 100)}%`
+    : (product.discount || '0%');
+
+  return {
+    id: product._id || product.id,
+    name: product.nome || product.name || 'Produto',
+    slug: product.slug || '',
+    description: product.descricao || product.description || '',
+    weight: product.weight || '',
+    price,
+    oldPrice,
+    discount,
+    images,
+    benefits: Array.isArray(product.benefits) && product.benefits.length > 0
+      ? product.benefits
+      : ['Qualidade garantida', 'Entrega rapida', 'Produto original'],
+    category: product.categoria || product.category || 'outro',
+    inStock: product.inStock ?? (Number(product.estoque ?? 0) > 0),
+  };
+}
+
+function mapJsonProductToStoreProduct(product) {
+  return {
+    id: product.id,
+    name: product.name || 'Produto',
+    slug: product.slug || '',
+    description: product.description || '',
+    weight: product.weight || '',
+    price: Number(product.price ?? 0),
+    oldPrice: Number(product.oldPrice ?? product.price ?? 0),
+    discount: product.discount || '0%',
+    images: Array.isArray(product.images) && product.images.length > 0
+      ? product.images
+      : ['images/painelgaak.png'],
+    benefits: Array.isArray(product.benefits) && product.benefits.length > 0
+      ? product.benefits
+      : ['Qualidade garantida'],
+    category: product.category || 'outro',
+    inStock: product.inStock ?? true,
+  };
+}
+
+function getRandomWebProductImages(product) {
+  const keyword = productCategoryKeywords[product.category] || `${product.name} suplemento`;
+  const seed = Math.abs(hashCode(product.id));
+
+  return [0, 1, 2].map((index) => {
+    const sig = seed + index + Date.now() % 1000;
+    return `https://source.unsplash.com/900x900/?${encodeURIComponent(keyword)}&sig=${sig}`;
+  });
+}
+
+function hashCode(value) {
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash;
+}

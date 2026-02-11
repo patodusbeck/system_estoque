@@ -9,7 +9,9 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "mongodb": "^6.3.0"
+    "bcryptjs": "^2.4.3",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.10.1"
   },
   "devDependencies": {
     "vercel": "^33.0.0"

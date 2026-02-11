@@ -211,42 +211,18 @@ async function submitOrder(event) {
     total: window.cart.getTotal()
   };
 
-  try {
-    // Send to API
-    const response = await fetch('/api/save-order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(orderData)
-    });
+  // Save order in background without blocking WhatsApp opening
+  saveOrderBestEffort(orderData);
 
-    const result = await response.json();
+  // Update button and continue immediately to WhatsApp
+  submitBtn.innerHTML = '<ion-icon name="logo-whatsapp"></ion-icon> ABRINDO WHATSAPP...';
 
-    if (result.success) {
-      // Success! Redirect to WhatsApp
-      redirectToWhatsApp(orderData);
-      
-      // Clear cart
-      window.cart.clear();
-      
-      // Close modal
-      closeModal('checkout-modal');
-      
-      // Show success message
-      showSuccessMessage();
-    } else {
-      throw new Error(result.error || 'Erro ao processar pedido');
-    }
+  // Clear cart and close modal before leaving page
+  window.cart.clear();
+  closeModal('checkout-modal');
 
-  } catch (error) {
-    console.error('Error submitting order:', error);
-    alert('Erro ao processar pedido: ' + error.message + '\n\nTente novamente ou entre em contato conosco.');
-    
-    // Re-enable button
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<ion-icon name="checkmark-circle"></ion-icon> CONFIRMAR PEDIDO';
-  }
+  // Native WhatsApp open (fallback to web)
+  redirectToWhatsApp(orderData);
 }
 
 /**
@@ -285,8 +261,21 @@ CEP: ${order.customer.address.zipCode}
 function redirectToWhatsApp(order) {
   const phone = '5599984065730';
   const message = generateWhatsAppMessage(order);
-  const url = `https://wa.me/${phone}?text=${message}`;
-  window.open(url, '_blank');
+  const nativeUrl = `whatsapp://send?phone=${phone}&text=${message}`;
+  const webUrl = `https://wa.me/${phone}?text=${message}`;
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    window.location.href = nativeUrl;
+    setTimeout(() => {
+      if (document.visibilityState === 'visible') {
+        window.location.href = webUrl;
+      }
+    }, 1200);
+    return;
+  }
+
+  window.location.href = webUrl;
 }
 
 /**
@@ -308,4 +297,20 @@ function showSuccessMessage() {
     message.classList.add('fade-out');
     setTimeout(() => message.remove(), 500);
   }, 3000);
+}
+
+/**
+ * Save order in API as background best-effort action
+ */
+function saveOrderBestEffort(orderData) {
+  fetch('/api/save-order', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(orderData),
+    keepalive: true
+  }).catch((error) => {
+    console.error('Error saving order in background:', error);
+  });
 }

@@ -151,5 +151,25 @@
     ],
     "category": "hipercalorico",
     "inStock": true
+  },
+  {
+    "id": "camiseta-darklab",
+    "name": "Camiseta DarkLab tamanho G",
+    "slug": "camiseta-darklab-g",
+    "description": "Camiseta esportiva com tecido leve e secagem rapida, ideal para treino e uso diario.",
+    "weight": "Tamanho G",
+    "price": 89.90,
+    "oldPrice": 119.99,
+    "discount": "10%",
+    "images": [
+      "images/products/camdark.png"
+    ],
+    "benefits": [
+      "Conforto no treino",
+      "Tecido leve",
+      "Secagem rapida"
+    ],
+    "category": "vestuario",
+    "inStock": true
   }
 ]
