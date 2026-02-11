@@ -5,8 +5,8 @@
 
 // ========== CONFIGURAÃ‡ÃƒO DE CORES ==========
 const CHART_COLORS = {
-    verde: '#b30018',
-    verdeClaro: '#ff2b3f',
+    verde: '#d10000',
+    verdeClaro: '#ff0000',
     azul: '#2196F3',
     laranja: '#FF9800',
     vermelho: '#dc3545',
@@ -57,7 +57,7 @@ function getSalesData(period) {
 
     if (period === 'week') {
         // Ãšltimos 7 dias
-        const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'SÃ¡b'];
+        const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
         for (let i = 6; i >= 0; i--) {
             const date = new Date(now);
             date.setDate(date.getDate() - i);
@@ -172,7 +172,7 @@ function getPaymentMethodsData() {
     const total = Object.values(payments).reduce((a, b) => a + b, 0) || 1;
     
     return {
-        labels: ['PIX', 'Dinheiro', 'DÃ©bito', 'CrÃ©dito'],
+        labels: ['PIX', 'Dinheiro', 'Debito', 'Credito'],
         data: [
             Math.round((payments.pix / total) * 100),
             Math.round((payments.dinheiro / total) * 100),
@@ -200,7 +200,7 @@ function createSalesChart(period = 'month') {
                 label: 'Vendas',
                 data: chartData.data,
                 borderColor: CHART_COLORS.verde,
-                backgroundColor: 'rgba(179, 0, 24, 0.16)',
+                backgroundColor: 'rgba(209, 0, 0, 0.20)',
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,

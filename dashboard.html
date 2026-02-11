@@ -87,7 +87,7 @@
         <section id="dashboard" class="content-section active">
             <div class="cards-grid">
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #b30018;">
+                    <div class="stat-icon" style="background: #d10000;">
                         <i class="fa-solid fa-users"></i>
                     </div>
                     <div class="stat-info">
@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #cc1122;">
+                    <div class="stat-icon" style="background: #e00000;">
                         <i class="fa-solid fa-box"></i>
                     </div>
                     <div class="stat-info">
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #ff2b3f;">
+                    <div class="stat-icon" style="background: #ff0000;">
                         <i class="fa-solid fa-shopping-cart"></i>
                     </div>
                     <div class="stat-info">
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #8f0013;">
+                    <div class="stat-icon" style="background: #b00000;">
                         <i class="fa-solid fa-dollar-sign"></i>
                     </div>
                     <div class="stat-info">
@@ -132,11 +132,11 @@
                 <!-- GrÃ¡fico de Vendas por PerÃ­odo -->
                 <div class="content-card chart-card">
                     <div class="card-header">
-                        <h2><i class="fa-solid fa-chart-line"></i> Vendas por PerÃ­odo</h2>
+                    <h2><i class="fa-solid fa-chart-line"></i> Vendas por Periodo</h2>
                         <select id="chartPeriod" class="chart-select">
-                            <option value="week">Ãšltima Semana</option>
-                            <option value="month" selected>Ãšltimo MÃªs</option>
-                            <option value="year">Ãšltimo Ano</option>
+                            <option value="week">Ultima Semana</option>
+                            <option value="month" selected>Ultimo Mes</option>
+                            <option value="year">Ultimo Ano</option>
                         </select>
                     </div>
                     <div class="chart-container">
@@ -183,7 +183,7 @@
                 <h2><i class="fa-solid fa-arrow-trend-up"></i> Indicadores de Crescimento</h2>
                 <div class="growth-indicators">
                     <div class="growth-item" id="vendasGrowthItem">
-                        <span class="growth-label">Vendas vs MÃªs Anterior</span>
+                        <span class="growth-label">Vendas vs Mes Anterior</span>
                         <span class="growth-value" id="vendasGrowthValue">--%</span>
                     </div>
                     <div class="growth-item" id="clientesGrowthItem">
@@ -191,7 +191,7 @@
                         <span class="growth-value" id="clientesGrowthValue">--%</span>
                     </div>
                     <div class="growth-item" id="ticketGrowthItem">
-                        <span class="growth-label">Ticket MÃ©dio</span>
+                        <span class="growth-label">Ticket Medio</span>
                         <span class="growth-value" id="ticketGrowthValue">--%</span>
                     </div>
                     <div class="growth-item" id="faturamentoGrowthItem">
@@ -217,7 +217,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Telefone</th>
-                            <th class="no-sort">AÃ§Ãµes</th>
+                            <th class="no-sort">Acoes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -260,9 +260,9 @@
                         <tr>
                             <th>ID</th>
                             <th>Produto</th>
-                            <th>PreÃ§o</th>
+                            <th>Preco</th>
                             <th>Estoque</th>
-                            <th class="no-sort">AÃ§Ãµes</th>
+                            <th class="no-sort">Acoes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -297,7 +297,7 @@
         <section id="vendas" class="content-section">
             <div class="content-card">
                 <div class="card-header">
-                    <h2>HistÃ³rico de Vendas</h2>
+                    <h2>Historico de Vendas</h2>
                     <button class="btn-primary" onclick="openModal('venda')">
                         <i class="fa-solid fa-plus"></i> Nova Venda
                     </button>
@@ -406,6 +406,8 @@
 </body>
 
 </html>
+
+
 
 
 
