@@ -177,9 +177,9 @@ function openCart() {
         <p class="cart-item-price">R$ ${item.price.toFixed(2)}</p>
       </div>
       <div class="cart-item-quantity">
-        <button onclick="window.cart.updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+        <button onclick="window.cart.updateQuantity('${item.id}', ${item.quantity - 1})"><ion-icon name="remove-outline"></ion-icon></button>
         <span>${item.quantity}</span>
-        <button onclick="window.cart.updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+        <button onclick="window.cart.updateQuantity('${item.id}', ${item.quantity + 1})"><ion-icon name="add-outline"></ion-icon></button>
       </div>
       <button class="cart-item-remove" onclick="window.cart.removeItem('${item.id}')">
         <ion-icon name="trash-outline"></ion-icon>
