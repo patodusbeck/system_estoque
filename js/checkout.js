@@ -211,19 +211,24 @@ async function submitOrder(event) {
     total: window.cart.getTotal()
   };
 
-  // Save order in background without blocking WhatsApp opening
-  saveOrderBestEffort(orderData);
-  registerClientBestEffort(customer);
+  try {
+    // Sync everything before redirecting:
+    // client registration, stock update and sale creation.
+    await processOrderSync(orderData);
 
-  // Update button and continue immediately to WhatsApp
-  submitBtn.innerHTML = '<ion-icon name="logo-whatsapp"></ion-icon> ABRINDO WHATSAPP...';
+    // Keep legacy order save in background for compatibility/history.
+    saveOrderBestEffort(orderData);
 
-  // Clear cart and close modal before leaving page
-  window.cart.clear();
-  closeModal('checkout-modal');
-
-  // Native WhatsApp open (fallback to web)
-  redirectToWhatsApp(orderData);
+    submitBtn.innerHTML = '<ion-icon name="logo-whatsapp"></ion-icon> ABRINDO WHATSAPP...';
+    window.cart.clear();
+    closeModal('checkout-modal');
+    redirectToWhatsApp(orderData);
+  } catch (error) {
+    console.error('Error syncing order:', error);
+    alert(`Nao foi possivel sincronizar o pedido: ${error.message}\n\nTente novamente.`);
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<ion-icon name="checkmark-circle"></ion-icon> CONFIRMAR PEDIDO';
+  }
 }
 
 /**
@@ -235,10 +240,10 @@ function generateWhatsAppMessage(order) {
     .join('\n');
 
   const message = `
-*GAAK SUPLEMENTOS*
+*PEDIDO GAAK SUPLEMENTOS*
 
 *Cliente:* ${order.customer.name}
-${order.customer.phone ? `*Telefone:* ${order.customer.phone}` : ''}
+
 
 *Produtos:*
 ${productsText}
@@ -250,7 +255,6 @@ ${productsText}
 ${order.customer.address.street}, nº ${order.customer.address.number}
 ${order.customer.address.complement ? order.customer.address.complement + '\n' : ''}${order.customer.address.neighborhood}
 ${order.customer.address.city} - ${order.customer.address.state}
-CEP: ${order.customer.address.zipCode}
   `.trim();
 
   return encodeURIComponent(message);
@@ -317,35 +321,22 @@ function saveOrderBestEffort(orderData) {
 }
 
 /**
- * Register or update customer in clients collection (dashboard)
+ * Sync order data with dashboard collections:
+ * clients + stock + sales
  */
-function registerClientBestEffort(customer) {
-  const address = customer?.address || {};
-  const addressText = [
-    `${address.street || ''}, ${address.number || ''}`.trim().replace(/^,\s*/, ''),
-    address.complement || '',
-    address.neighborhood || '',
-    `${address.city || ''} - ${address.state || ''}`.trim().replace(/^-\s*/, ''),
-    address.zipCode ? `CEP: ${address.zipCode}` : ''
-  ].filter(Boolean).join(' | ');
-
-  const payload = {
-    nome: customer?.name?.trim() || '',
-    telefone: customer?.phone?.trim() || '',
-    endereco: addressText,
-    email: ''
-  };
-
-  if (!payload.nome) return;
-
-  fetch('/api/clients', {
+async function processOrderSync(orderData) {
+  const response = await fetch('/api/process-order', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(payload),
-    keepalive: true
-  }).catch((error) => {
-    console.error('Error registering client in background:', error);
+    body: JSON.stringify(orderData)
   });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || !result.success) {
+    throw new Error(result.error || result.message || 'Falha na sincronizacao');
+  }
+
+  return result;
 }

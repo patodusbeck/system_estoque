@@ -1,5 +1,5 @@
 /* ========================================
-   COMERCIAL MATOS - SISTEMA DE AUTENTICAÇÃO
+   GAAK Suplementos - SISTEMA DE AUTENTICAÇÃO
    ======================================== */
 
 // ========== CONFIGURAÇÃO ==========

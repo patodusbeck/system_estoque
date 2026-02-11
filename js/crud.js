@@ -1,5 +1,5 @@
 /* ========================================
-   COMERCIAL MATOS - SISTEMA CRUD (API)
+   GAAK Suplementos - SISTEMA CRUD (API)
    Create, Read, Update, Delete via Backend
    ======================================== */
 

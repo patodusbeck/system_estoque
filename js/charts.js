@@ -1,5 +1,5 @@
 /* ========================================
-   COMERCIAL MATOS - GRÁFICOS DO DASHBOARD
+   GAAK Suplementos - GRÁFICOS DO DASHBOARD
    Integrado com dados reais da API
    ======================================== */
 

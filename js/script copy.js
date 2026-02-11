@@ -1,11 +1,11 @@
 /* ========================================
-   COMERCIAL MATOS - SCRIPT DO CARDÁPIO (API)
+   GAAK Suplementos - SCRIPT DO CARDÁPIO (API)
    ======================================== */
 
 // ========== CONFIGURAÇÃO ==========
 const CONFIG = {
     whatsapp: "5599984065730",
-    nomeEmpresa: "Comercial Matos"
+    nomeEmpresa: "GAAK Suplementos"
 };
 
 // ========== ESTADO ==========

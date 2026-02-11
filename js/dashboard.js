@@ -1,5 +1,5 @@
 /* ========================================
-   COMERCIAL MATOS - DASHBOARD SCRIPT (DYNAMIC)
+   GAAK Suplementos - DASHBOARD SCRIPT (DYNAMIC)
    ======================================== */
 
 // ========== ELEMENTOS DO DOM ==========

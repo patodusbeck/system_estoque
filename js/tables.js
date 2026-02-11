@@ -1,5 +1,5 @@
 /* ========================================
-   COMERCIAL MATOS - SISTEMA DE TABELAS
+   GAAK Suplementos - SISTEMA DE TABELAS
    Busca, Filtros, Ordenação e Paginação
    ======================================== */
 
