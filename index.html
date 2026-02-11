@@ -37,7 +37,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-    <p>ADQUIRA JÁ!! OFERTA LIMITADA <span id="countdown"> </span></p>
+    <p>OFERTA LIMITADA <span id="countdown"></span></p>
 </div>
 
     <!-- Main Content -->
@@ -387,6 +387,40 @@
 
 
     <script src="js/script.js"></script>
+
+    <!-- Daily Countdown Timer -->
+    <script>
+        function updateDailyCountdown() {
+            // Get current time in Brasília timezone (UTC-3)
+            const now = luxon.DateTime.now().setZone('America/Sao_Paulo');
+            
+            // Get end of day (23:59:59) in Brasília timezone
+            const endOfDay = now.endOf('day');
+            
+            // Calculate difference
+            const diff = endOfDay.diff(now, ['hours', 'minutes', 'seconds']);
+            
+            // Format countdown
+            const hours = Math.floor(diff.hours);
+            const minutes = Math.floor(diff.minutes);
+            const seconds = Math.floor(diff.seconds);
+            
+            // Update display
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
+                countdownElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            
+            // Check if we've reached midnight and reset
+            if (hours === 0 && minutes === 0 && seconds === 0) {
+                setTimeout(updateDailyCountdown, 1000);
+            }
+        }
+        
+        // Update countdown every second
+        updateDailyCountdown();
+        setInterval(updateDailyCountdown, 1000);
+    </script>
 
   
 

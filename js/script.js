@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     scheduleHideControls();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+/*document.addEventListener("DOMContentLoaded", () => {
     const countdownElement = document.getElementById("countdown");
     if (!countdownElement) {
         return;
@@ -332,4 +332,4 @@ document.addEventListener("DOMContentLoaded", () => {
     tick();
     setInterval(tick, 1000);
 });
-
+*/
