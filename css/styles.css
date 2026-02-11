@@ -64,6 +64,12 @@ body {
     font-size: 19px;
 }
 
+.header #countdown {
+    font-weight: bold;
+    color: #ffcc00;
+    font-size: 19px;
+}
+
 @media (max-width: 767px) {
     .header {
         font-size: 16px;

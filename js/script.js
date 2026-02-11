@@ -343,3 +343,29 @@ document.addEventListener("DOMContentLoaded", () => {
     scheduleHideControls();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const countdownElement = document.getElementById("countdown");
+    if (!countdownElement) {
+        return;
+    }
+
+    const totalSeconds = 4 * 60 * 60;
+    let remainingSeconds = totalSeconds;
+
+    const formatCountdown = (seconds) => {
+        const days = Math.floor(seconds / 86400);
+        const hours = Math.floor((seconds % 86400) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    };
+
+    const tick = () => {
+        countdownElement.textContent = formatCountdown(remainingSeconds);
+        remainingSeconds = remainingSeconds > 0 ? remainingSeconds - 1 : totalSeconds;
+    };
+
+    tick();
+    setInterval(tick, 1000);
+});
+
