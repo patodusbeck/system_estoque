@@ -31,8 +31,6 @@ const productSchema = new mongoose.Schema(
     slug: String,
     weight: String,
     preco: { type: Number, required: true },
-    oldPrice: Number,
-    discount: String,
     estoque: { type: Number, default: 0 },
     categoria: { type: String, required: true },
     img: String,
@@ -66,6 +64,9 @@ const saleSchema = new mongoose.Schema(
         quantidade: Number,
       },
     ],
+    subtotal: { type: Number, default: 0 },
+    discountAmount: { type: Number, default: 0 },
+    couponCode: { type: String, default: '' },
     total: { type: Number, required: true },
     pagamento: {
       type: String,
@@ -78,6 +79,17 @@ const saleSchema = new mongoose.Schema(
       default: 'concluida',
     },
     data: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
+const couponSchema = new mongoose.Schema(
+  {
+    code: { type: String, required: true, unique: true, uppercase: true, trim: true },
+    discountPercent: { type: Number, required: true, min: 1, max: 100 },
+    startsAt: { type: Date, default: Date.now },
+    expiresAt: { type: Date, required: true },
+    active: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
@@ -95,4 +107,5 @@ const userSchema = new mongoose.Schema(
 export const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
 export const Client = mongoose.models.Client || mongoose.model('Client', clientSchema);
 export const Sale = mongoose.models.Sale || mongoose.model('Sale', saleSchema);
+export const Coupon = mongoose.models.Coupon || mongoose.model('Coupon', couponSchema);
 export const User = mongoose.models.User || mongoose.model('User', userSchema);

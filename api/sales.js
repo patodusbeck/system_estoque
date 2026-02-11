@@ -23,7 +23,7 @@ export default async (req, res) => {
         }
 
         if (req.method === 'POST') {
-            const { clienteId, produtos, pagamento, total, status } = req.body;
+            const { clienteId, produtos, pagamento, total, subtotal, discountAmount, couponCode, status } = req.body;
 
             if (!produtos || produtos.length === 0) {
                 return res.status(400).json({ error: 'Produtos são obrigatórios' });
@@ -43,8 +43,11 @@ export default async (req, res) => {
                 cliente: clienteId || null,
                 clienteNome,
                 produtos,
+                subtotal: Number(subtotal || total || 0),
+                discountAmount: Number(discountAmount || 0),
+                couponCode: String(couponCode || '').trim().toUpperCase(),
                 pagamento,
-                total,
+                total: Number(total || 0),
                 status: status || 'concluida'
             });
 

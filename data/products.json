@@ -6,8 +6,6 @@
     "description": "Creatina monohidratada de alta qualidade da Max Titanium. Aumenta a força muscular, melhora o desempenho nos treinos e acelera a recuperação. Produto 100% puro e testado.",
     "weight": "300g",
     "price": 59.99,
-    "oldPrice": 119.99,
-    "discount": "40%",
     "images": [
       "images/painelgaak.png",
       "images/painelgaak.png",
@@ -35,8 +33,6 @@
     "description": "Whey Protein concentrado de alta qualidade com rápida absorção. Rico em aminoácidos essenciais, ideal para ganho de massa muscular e recuperação pós-treino.",
     "weight": "900g",
     "price": 49.99,
-    "oldPrice": 74.99,
-    "discount": "30%",
     "images": [
       "images/painelgaak.png",
       "images/painelgaak.png",
@@ -63,9 +59,7 @@
     "slug": "pre-workout-max-titanium-300g",
     "description": "Pré-treino completo com cafeína, beta-alanina e arginina. Proporciona energia explosiva, foco mental e resistência para treinos intensos.",
     "weight": "300g",
-    "price": 139.90,
-    "oldPrice": 149.99,
-    "discount": "10%",
+    "price": 139.9,
     "images": [
       "images/painelgaak.png",
       "images/painelgaak.png",
@@ -92,9 +86,7 @@
     "slug": "bcaa-211-200g",
     "description": "Aminoácidos de cadeia ramificada na proporção ideal 2:1:1. Reduz fadiga muscular, acelera recuperação e protege a massa magra durante treinos intensos.",
     "weight": "200g",
-    "price": 76.90,
-    "oldPrice": 89.99,
-    "discount": "15%",
+    "price": 76.9,
     "images": [
       "images/painelgaak.png",
       "images/painelgaak.png",
@@ -114,9 +106,7 @@
     "slug": "glutamina-300g",
     "description": "L-Glutamina pura para suporte imunológico e recuperação muscular. Aminoácido mais abundante no corpo, essencial para atletas de alta performance.",
     "weight": "300g",
-    "price": 79.90,
-    "oldPrice": 99.99,
-    "discount": "20%",
+    "price": 79.9,
     "images": [
       "images/painelgaak.png",
       "images/painelgaak.png",
@@ -136,9 +126,7 @@
     "slug": "hipercalorico-3kg",
     "description": "Hipercalórico de alta densidade energética para ganho de massa rápido. Combinação de proteínas, carboidratos e vitaminas para quem tem dificuldade em ganhar peso.",
     "weight": "3kg",
-    "price": 109.90,
-    "oldPrice": 149.99,
-    "discount": "25%",
+    "price": 109.9,
     "images": [
       "images/painelgaak.png",
       "images/painelgaak.png",
@@ -158,9 +146,7 @@
     "slug": "camiseta-darklab-g",
     "description": "Camiseta esportiva com tecido leve e secagem rapida, ideal para treino e uso diario.",
     "weight": "Tamanho G",
-    "price": 89.90,
-    "oldPrice": 119.99,
-    "discount": "10%",
+    "price": 89.9,
     "images": [
       "images/products/camdark.png"
     ],

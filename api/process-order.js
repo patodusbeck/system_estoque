@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { connectDB, Client, Product, Sale } from './_shared/db.js';
+import { connectDB, Client, Product, Sale, Coupon } from './_shared/db.js';
 
 function normalizePhone(value) {
   return String(value || '').replace(/\D/g, '');
@@ -16,6 +16,18 @@ function mapPaymentMethod(method) {
 
 function isValidObjectId(value) {
   return mongoose.Types.ObjectId.isValid(value);
+}
+
+function normalizeCouponCode(value) {
+  return String(value || '').trim().toUpperCase();
+}
+
+function getCouponStatus(coupon) {
+  const now = new Date();
+  if (!coupon.active) return 'inativo';
+  if (coupon.startsAt && now < coupon.startsAt) return 'agendado';
+  if (coupon.expiresAt && now > coupon.expiresAt) return 'expirado';
+  return 'ativo';
 }
 
 async function findClientForOrder(customer) {
@@ -104,7 +116,7 @@ export default async (req, res) => {
   try {
     await connectDB();
 
-    const { customer, products, paymentMethod, total } = req.body || {};
+    const { customer, products, paymentMethod, couponCode } = req.body || {};
 
     if (!customer?.name || String(customer.name).trim().length < 2) {
       return res.status(400).json({ success: false, error: 'Cliente invalido' });
@@ -116,7 +128,7 @@ export default async (req, res) => {
     const client = await upsertClient(customer);
 
     const saleItems = [];
-    let recomputedTotal = 0;
+    let subtotal = 0;
 
     for (const item of products) {
       const quantity = Math.max(1, Number(item.quantity || 1));
@@ -140,8 +152,8 @@ export default async (req, res) => {
       product.inStock = product.estoque > 0;
       await product.save();
 
-      const unitPrice = Number(item.price || product.preco || 0);
-      recomputedTotal += unitPrice * quantity;
+      const unitPrice = Number(product.preco || 0);
+      subtotal += unitPrice * quantity;
 
       saleItems.push({
         produto: product._id,
@@ -151,11 +163,34 @@ export default async (req, res) => {
       });
     }
 
+    const normalizedCouponCode = normalizeCouponCode(couponCode);
+    let discountAmount = 0;
+    let appliedCouponCode = '';
+    if (normalizedCouponCode) {
+      const coupon = await Coupon.findOne({ code: normalizedCouponCode });
+      if (!coupon) {
+        return res.status(400).json({ success: false, error: 'Cupom nao encontrado' });
+      }
+
+      const status = getCouponStatus(coupon);
+      if (status !== 'ativo') {
+        return res.status(400).json({ success: false, error: `Cupom ${status}` });
+      }
+
+      discountAmount = Number(((subtotal * Number(coupon.discountPercent || 0)) / 100).toFixed(2));
+      appliedCouponCode = coupon.code;
+    }
+
+    const finalTotal = Number(Math.max(subtotal - discountAmount, 0).toFixed(2));
+
     const sale = new Sale({
       cliente: client._id,
       clienteNome: client.nome,
       produtos: saleItems,
-      total: Number(total || recomputedTotal),
+      subtotal: Number(subtotal.toFixed(2)),
+      discountAmount,
+      couponCode: appliedCouponCode,
+      total: finalTotal,
       pagamento: mapPaymentMethod(paymentMethod),
       status: 'concluida'
     });
@@ -165,6 +200,10 @@ export default async (req, res) => {
       success: true,
       saleId: sale._id,
       clientId: client._id,
+      subtotal: sale.subtotal,
+      discountAmount: sale.discountAmount,
+      total: sale.total,
+      couponCode: sale.couponCode || '',
       message: 'Pedido sincronizado com sucesso'
     });
   } catch (error) {

@@ -44,6 +44,10 @@
                 <i class="fa-solid fa-shopping-cart"></i>
                 <span>Vendas</span>
             </a>
+            <a href="#cupons" class="nav-item" data-section="cupons">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Cupons</span>
+            </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -305,6 +309,7 @@
                             <th>Data</th>
                             <th>Cliente</th>
                             <th>Total</th>
+                            <th>Cupom</th>
                             <th class="no-sort">Status</th>
                         </tr>
                     </thead>
@@ -314,35 +319,65 @@
                             <td>23/01/2026</td>
                             <td>JoÃ£o Silva</td>
                             <td>R$ 45,00</td>
-                            <td><span class="badge badge-success">ConcluÃ­da</span></td>
+                            <td>Não</td>                             <td><span class="badge badge-success">ConcluÃ­da</span></td>
                         </tr>
                         <tr>
                             <td>#002</td>
                             <td>23/01/2026</td>
                             <td>Maria Santos</td>
                             <td>R$ 32,00</td>
-                            <td><span class="badge badge-warning">Pendente</span></td>
+                            <td>Não</td>                             <td><span class="badge badge-warning">Pendente</span></td>
                         </tr>
                         <tr>
                             <td>#003</td>
                             <td>22/01/2026</td>
                             <td>Pedro Oliveira</td>
                             <td>R$ 78,00</td>
-                            <td><span class="badge badge-success">ConcluÃ­da</span></td>
+                            <td>Não</td>                             <td><span class="badge badge-success">ConcluÃ­da</span></td>
                         </tr>
                         <tr>
                             <td>#004</td>
                             <td>22/01/2026</td>
                             <td>Ana Costa</td>
                             <td>R$ 25,00</td>
-                            <td><span class="badge badge-success">ConcluÃ­da</span></td>
+                            <td>Não</td>                             <td><span class="badge badge-success">ConcluÃ­da</span></td>
                         </tr>
                         <tr>
                             <td>#005</td>
                             <td>21/01/2026</td>
                             <td>Carlos Lima</td>
                             <td>R$ 56,00</td>
-                            <td><span class="badge badge-danger">Cancelada</span></td>
+                            <td>Não</td>                             <td><span class="badge badge-danger">Cancelada</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Cupons -->
+        <section id="cupons" class="content-section">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Gerenciar Cupons</h2>
+                    <button class="btn-primary" onclick="openModal('cupom')">
+                        <i class="fa-solid fa-plus"></i> Novo Cupom
+                    </button>
+                </div>
+                <table class="data-table" id="cuponsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Codigo</th>
+                            <th>Desconto</th>
+                            <th>Inicio</th>
+                            <th>Validade</th>
+                            <th>Status</th>
+                            <th class="no-sort">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7">Carregando...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -371,4 +406,8 @@
 </body>
 
 </html>
+
+
+
+
 

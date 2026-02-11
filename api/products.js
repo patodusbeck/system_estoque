@@ -9,8 +9,6 @@ function getSeedProducts() {
       slug: 'creatina-max-titanium-300g',
       weight: '300g',
       preco: 59.99,
-      oldPrice: 119.99,
-      discount: '40%',
       estoque: 100,
       categoria: 'creatina',
       images: ['images/painelgaak.png'],
@@ -25,8 +23,6 @@ function getSeedProducts() {
       slug: 'whey-protein-max-titanium-900g',
       weight: '900g',
       preco: 49.99,
-      oldPrice: 74.99,
-      discount: '30%',
       estoque: 100,
       categoria: 'proteina',
       images: ['images/painelgaak.png'],
@@ -41,8 +37,6 @@ function getSeedProducts() {
       slug: 'pre-workout-max-titanium-300g',
       weight: '300g',
       preco: 139.9,
-      oldPrice: 149.99,
-      discount: '10%',
       estoque: 80,
       categoria: 'pre-treino',
       images: ['images/painelgaak.png'],
@@ -56,8 +50,6 @@ function getSeedProducts() {
       slug: 'bcaa-211-200g',
       weight: '200g',
       preco: 76.9,
-      oldPrice: 89.99,
-      discount: '15%',
       estoque: 60,
       categoria: 'aminoacidos',
       images: ['images/painelgaak.png'],
@@ -71,8 +63,6 @@ function getSeedProducts() {
       slug: 'glutamina-300g',
       weight: '300g',
       preco: 79.9,
-      oldPrice: 99.99,
-      discount: '20%',
       estoque: 60,
       categoria: 'aminoacidos',
       images: ['images/painelgaak.png'],
@@ -86,8 +76,6 @@ function getSeedProducts() {
       slug: 'hipercalorico-3kg',
       weight: '3kg',
       preco: 109.9,
-      oldPrice: 149.99,
-      discount: '25%',
       estoque: 50,
       categoria: 'hipercalorico',
       images: ['images/painelgaak.png'],
@@ -107,7 +95,6 @@ async function seedProducts() {
 
 function normalizeProductPayload(payload) {
   const preco = Number(payload.preco ?? payload.price ?? 0);
-  const oldPrice = Number(payload.oldPrice ?? 0);
   const estoque = Number(payload.estoque ?? 0);
 
   const images = Array.isArray(payload.images)
@@ -122,8 +109,6 @@ function normalizeProductPayload(payload) {
     slug: payload.slug ?? '',
     weight: payload.weight ?? '',
     preco,
-    oldPrice: Number.isFinite(oldPrice) && oldPrice > 0 ? oldPrice : undefined,
-    discount: payload.discount ?? '',
     estoque,
     categoria: payload.categoria ?? payload.category ?? 'outro',
     img: images[0],

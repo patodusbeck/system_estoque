@@ -29,7 +29,8 @@ function navigateToSection(sectionId) {
         dashboard: 'Dashboard',
         clientes: 'Clientes',
         produtos: 'Produtos',
-        vendas: 'Vendas'
+        vendas: 'Vendas',
+        cupons: 'Cupons'
     };
     pageTitle.textContent = titles[sectionId] || 'Dashboard';
     closeSidebar();
@@ -71,7 +72,8 @@ function closeSidebar() {
 const SECTION_ENTITY_MAP = {
     clientes: 'clients',
     produtos: 'products',
-    vendas: 'sales'
+    vendas: 'sales',
+    cupons: 'coupons'
 };
 
 function buildTableSignature(sectionId, data) {
@@ -82,7 +84,10 @@ function buildTableSignature(sectionId, data) {
     if (sectionId === 'produtos') {
         return JSON.stringify(data.map((item) => [item._id, item.nome, item.preco, item.estoque, item.updatedAt]));
     }
-    return JSON.stringify(data.map((item) => [item._id, item.total, item.status, item.data, item.updatedAt]));
+    if (sectionId === 'cupons') {
+        return JSON.stringify(data.map((item) => [item._id, item.code, item.discountPercent, item.startsAt, item.expiresAt, item.active, item.updatedAt]));
+    }
+    return JSON.stringify(data.map((item) => [item._id, item.total, item.couponCode, item.status, item.data, item.updatedAt]));
 }
 
 async function loadTableData(sectionId, options = {}) {
@@ -92,11 +97,12 @@ async function loadTableData(sectionId, options = {}) {
 
     const tableId = `${sectionId}Table`;
     const tbody = document.querySelector(`#${tableId} tbody`);
+    const columnsCount = document.querySelectorAll(`#${tableId} thead th`).length || 1;
     if (!tbody) return;
 
     const previousScrollY = preserveScroll ? window.scrollY : 0;
     if (!silent) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Carregando...</td></tr>';
+        tbody.innerHTML = `<tr><td colspan="${columnsCount}" style="text-align:center">Carregando...</td></tr>`;
     }
 
     try {
@@ -118,7 +124,7 @@ async function loadTableData(sectionId, options = {}) {
         }
     } catch (error) {
         if (!silent) {
-            tbody.innerHTML = `<tr><td colspan="5" style="color:red">Erro: ${error.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="${columnsCount}" style="color:red">Erro: ${error.message}</td></tr>`;
         }
     }
 }
@@ -130,7 +136,8 @@ function renderTableRows(sectionId, data) {
     tbody.innerHTML = '';
 
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Nenhum registro encontrado.</td></tr>';
+        const columnsCount = document.querySelectorAll(`#${tableId} thead th`).length || 1;
+        tbody.innerHTML = `<tr><td colspan="${columnsCount}" style="text-align:center">Nenhum registro encontrado.</td></tr>`;
         return;
     }
 
@@ -169,7 +176,25 @@ function renderTableRows(sectionId, data) {
                 <td data-label="Data">${time} - ${date}</td>
                 <td data-label="Cliente">${clientName}</td>
                 <td data-label="Total">R$ ${item.total.toFixed(2)}</td>
+                <td data-label="Cupom">${item.couponCode || 'Não'}</td>
                 <td data-label="Status" class="status-cell"><span class="badge badge-${statusClass}">${item.status}</span></td>
+            `;
+        } else if (sectionId === 'cupons') {
+            const start = item.startsAt ? new Date(item.startsAt).toLocaleString('pt-BR') : '-';
+            const end = item.expiresAt ? new Date(item.expiresAt).toLocaleString('pt-BR') : '-';
+            const status = item.status || ((item.active === false) ? 'inativo' : 'ativo');
+            const statusClass = status === 'ativo' ? 'success' : status === 'expirado' ? 'danger' : 'warning';
+            row = `
+                <td data-label="ID">${item._id.substr(-6)}</td>
+                <td data-label="Codigo">${item.code}</td>
+                <td data-label="Desconto">${Number(item.discountPercent || 0)}%</td>
+                <td data-label="Inicio">${start}</td>
+                <td data-label="Validade">${end}</td>
+                <td data-label="Status" class="status-cell"><span class="badge badge-${statusClass}">${status}</span></td>
+                <td data-label="Ações" class="actions-cell">
+                    <button class="btn-icon" onclick="editItem('coupon', '${item._id}')"><i class="fa-solid fa-edit"></i></button>
+                    <button class="btn-icon btn-danger" onclick="deleteItem('coupon', '${item._id}')"><i class="fa-solid fa-trash"></i></button>
+                </td>
             `;
         }
 

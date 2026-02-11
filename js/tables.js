@@ -437,6 +437,7 @@ function initTables() {
         const clientesTableEl = document.getElementById('clientesTable');
         const produtosTableEl = document.getElementById('produtosTable');
         const vendasTableEl = document.getElementById('vendasTable');
+        const cuponsTableEl = document.getElementById('cuponsTable');
 
         if (clientesTableEl) {
             window.tables.clientes = new DataTable('clientesTable', {
@@ -452,6 +453,12 @@ function initTables() {
 
         if (vendasTableEl) {
             window.tables.vendas = new DataTable('vendasTable', {
+                itemsPerPage: 10
+            });
+        }
+
+        if (cuponsTableEl) {
+            window.tables.cupons = new DataTable('cuponsTable', {
                 itemsPerPage: 10
             });
         }

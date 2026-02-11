@@ -33,11 +33,6 @@ function renderProductCard(product) {
   const estoque = Number(product.estoque || 0);
   const inStock = product.inStock ?? estoque > 0;
   const preco = Number(product.preco || 0);
-  const oldPriceRaw = Number(product.oldPrice || 0);
-  const oldPrice = oldPriceRaw > preco ? oldPriceRaw : null;
-  const desconto = oldPrice
-    ? `${Math.round(((oldPrice - preco) / oldPrice) * 100)}% DESCONTO`
-    : 'OFERTA';
   const benefits = Array.isArray(product.benefits) && product.benefits.length
     ? product.benefits.slice(0, 3)
     : ['Produto original', 'Qualidade garantida', 'Entrega rapida'];
@@ -48,8 +43,7 @@ function renderProductCard(product) {
         <img src="${image}" alt="${nome}" class="title-image">
       </h1>
       <h2 class="card-subtitle-price">
-        <span class="periodo">${nome}</span><br>
-        <span class="desconto">(${escapeHtml(desconto)})</span>
+        <span class="periodo">${nome}</span>
       </h2>
       <ul class="card-benefits">
         ${benefits
@@ -59,11 +53,7 @@ function renderProductCard(product) {
           )
           .join('')}
       </ul>
-      ${
-        oldPrice
-          ? `<p class="price-text">DE <span class="old-price">${formatPrice(oldPrice)}</span> POR APENAS:</p>`
-          : `<p class="price-text">POR APENAS:</p>`
-      }
+      <p class="price-text">PRECO:</p>
       <p class="new-price">R$${formatPrice(preco)}</p>
       <button class="buy-button" onclick="openProductModal('${id}')" ${
         !inStock ? 'disabled' : ''

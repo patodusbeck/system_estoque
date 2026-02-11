@@ -122,10 +122,6 @@ function openProductModal(productId) {
           </div>
 
           <div class="product-pricing">
-            <div class="price-row">
-              <span class="old-price-modal">De R$ ${product.oldPrice.toFixed(2)}</span>
-              <span class="discount-badge">${product.discount} OFF</span>
-            </div>
             <div class="new-price-modal">R$ ${product.price.toFixed(2)}</div>
           </div>
 
@@ -208,11 +204,6 @@ function mapApiProductToStoreProduct(product) {
       : ['images/painelgaak.png'];
 
   const price = Number(product.preco ?? product.price ?? 0);
-  const oldPrice = Number(product.oldPrice ?? 0) || price;
-  const hasDiscount = oldPrice > price;
-  const discount = hasDiscount
-    ? `${Math.round(((oldPrice - price) / oldPrice) * 100)}%`
-    : (product.discount || '0%');
 
   return {
     id: product._id || product.id,
@@ -221,8 +212,6 @@ function mapApiProductToStoreProduct(product) {
     description: product.descricao || product.description || '',
     weight: product.weight || '',
     price,
-    oldPrice,
-    discount,
     images,
     benefits: Array.isArray(product.benefits) && product.benefits.length > 0
       ? product.benefits
@@ -240,8 +229,6 @@ function mapJsonProductToStoreProduct(product) {
     description: product.description || '',
     weight: product.weight || '',
     price: Number(product.price ?? 0),
-    oldPrice: Number(product.oldPrice ?? product.price ?? 0),
-    discount: product.discount || '0%',
     images: Array.isArray(product.images) && product.images.length > 0
       ? product.images
       : ['images/painelgaak.png'],

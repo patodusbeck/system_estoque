@@ -4,6 +4,43 @@
  */
 
 let selectedPaymentMethod = null;
+let appliedCoupon = null;
+
+function getCheckoutSummary() {
+  const subtotal = Number(window.cart.getTotal().toFixed(2));
+  const discountAmount = appliedCoupon
+    ? Number(((subtotal * Number(appliedCoupon.discountPercent || 0)) / 100).toFixed(2))
+    : 0;
+  const total = Number(Math.max(subtotal - discountAmount, 0).toFixed(2));
+
+  return {
+    subtotal,
+    discountAmount,
+    total,
+    couponCode: appliedCoupon?.code || ''
+  };
+}
+
+function updateCheckoutSummaryUI() {
+  const summary = getCheckoutSummary();
+  const subtotalEl = document.querySelector('.checkout-subtotal');
+  const discountEl = document.querySelector('.checkout-discount');
+  const totalEl = document.querySelector('.checkout-total');
+  const couponStatusEl = document.getElementById('coupon-status');
+  const couponHiddenEl = document.getElementById('checkout-coupon-code');
+
+  if (subtotalEl) subtotalEl.textContent = `R$ ${summary.subtotal.toFixed(2)}`;
+  if (discountEl) discountEl.textContent = `R$ ${summary.discountAmount.toFixed(2)}`;
+  if (totalEl) totalEl.textContent = `R$ ${summary.total.toFixed(2)}`;
+  if (couponHiddenEl) couponHiddenEl.value = summary.couponCode;
+
+  if (couponStatusEl) {
+    couponStatusEl.textContent = summary.couponCode
+      ? `Cupom aplicado: ${summary.couponCode} (-${Number(appliedCoupon.discountPercent || 0)}%)`
+      : 'Nenhum cupom aplicado';
+    couponStatusEl.classList.toggle('active', Boolean(summary.couponCode));
+  }
+}
 
 /**
  * Open payment method selection modal
@@ -63,11 +100,12 @@ function selectPayment(method) {
  * Open checkout form modal
  */
 function openCheckoutModal() {
+  appliedCoupon = null;
   const modal = document.createElement('div');
   modal.className = 'modal-overlay';
   modal.id = 'checkout-modal';
 
-  const total = window.cart.getTotal();
+  const summary = getCheckoutSummary();
 
   modal.innerHTML = `
     <div class="modal-content checkout-modal-content">
@@ -80,10 +118,27 @@ function openCheckoutModal() {
       <div class="modal-body">
         <div class="checkout-summary">
           <p><strong>Forma de pagamento:</strong> ${selectedPaymentMethod}</p>
-          <p><strong>Total:</strong> <span class="checkout-total">R$ ${total.toFixed(2)}</span></p>
+          <p><strong>Subtotal:</strong> <span class="checkout-subtotal">R$ ${summary.subtotal.toFixed(2)}</span></p>
+          <p><strong>Desconto (cupom):</strong> <span class="checkout-discount">R$ ${summary.discountAmount.toFixed(2)}</span></p>
+          <p><strong>Total:</strong> <span class="checkout-total">R$ ${summary.total.toFixed(2)}</span></p>
         </div>
 
         <form id="checkout-form" onsubmit="submitOrder(event)">
+          <div class="form-section">
+            <h3>Cupom (opcional)</h3>
+            <div class="form-row">
+              <div class="form-group" style="flex: 2;">
+                <label for="coupon-code">Codigo do cupom</label>
+                <input type="text" id="coupon-code" name="couponCodeInput" placeholder="Ex: GAAK25" autocomplete="off" style="text-transform: uppercase;">
+              </div>
+              <div class="form-group" style="flex: 1; align-self: end;">
+                <button type="button" class="btn-apply-coupon" onclick="applyCouponFromCheckout()">Aplicar cupom</button>
+              </div>
+            </div>
+            <p id="coupon-status">Nenhum cupom aplicado</p>
+            <input type="hidden" id="checkout-coupon-code" name="couponCode">
+          </div>
+
           <div class="form-section">
             <h3>Dados Pessoais</h3>
             <div class="form-group">
@@ -173,6 +228,15 @@ function openCheckoutModal() {
     }
     e.target.value = value;
   });
+
+  const couponInput = document.getElementById('coupon-code');
+  if (couponInput) {
+    couponInput.addEventListener('input', (e) => {
+      e.target.value = String(e.target.value || '').toUpperCase().replace(/\s+/g, '');
+    });
+  }
+
+  updateCheckoutSummaryUI();
 }
 
 /**
@@ -204,11 +268,15 @@ async function submitOrder(event) {
     }
   };
 
+  const summary = getCheckoutSummary();
   const orderData = {
     customer,
     products: window.cart.getItems(),
     paymentMethod: selectedPaymentMethod,
-    total: window.cart.getTotal()
+    subtotal: summary.subtotal,
+    discountAmount: summary.discountAmount,
+    total: summary.total,
+    couponCode: summary.couponCode
   };
 
   try {
@@ -249,6 +317,7 @@ function generateWhatsAppMessage(order) {
 ${productsText}
 
 *Valor Total:* R$${order.total.toFixed(2)}
+*CUPOM:* ${order.couponCode ? order.couponCode : 'Não'}
 *Forma de Pagamento:* ${order.paymentMethod}
 
 *Endereço de Entrega:*
@@ -340,3 +409,36 @@ async function processOrderSync(orderData) {
 
   return result;
 }
+
+async function applyCouponFromCheckout() {
+  const couponInput = document.getElementById('coupon-code');
+  const code = String(couponInput?.value || '').trim().toUpperCase();
+
+  if (!code) {
+    appliedCoupon = null;
+    updateCheckoutSummaryUI();
+    alert('Cupom removido.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/coupons?validate=true&code=${encodeURIComponent(code)}`);
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.valid) {
+      throw new Error(result.error || 'Cupom invalido');
+    }
+
+    appliedCoupon = {
+      code: result.coupon.code,
+      discountPercent: Number(result.coupon.discountPercent || 0)
+    };
+    updateCheckoutSummaryUI();
+    alert(`Cupom ${appliedCoupon.code} aplicado com ${appliedCoupon.discountPercent}% de desconto.`);
+  } catch (error) {
+    appliedCoupon = null;
+    updateCheckoutSummaryUI();
+    alert(`Nao foi possivel aplicar o cupom: ${error.message}`);
+  }
+}
+
+window.applyCouponFromCheckout = applyCouponFromCheckout;

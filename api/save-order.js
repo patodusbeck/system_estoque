@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { customer, products, paymentMethod, total } = req.body;
+    const { customer, products, paymentMethod, total, subtotal, discountAmount, couponCode } = req.body;
 
     // Validation
     const errors = validateOrder({ customer, products, paymentMethod, total });
@@ -83,6 +83,9 @@ export default async function handler(req, res) {
         subtotal: p.quantity * p.price
       })),
       paymentMethod,
+      subtotal: typeof subtotal === 'number' ? parseFloat(subtotal.toFixed(2)) : parseFloat(total.toFixed(2)),
+      discountAmount: typeof discountAmount === 'number' ? parseFloat(discountAmount.toFixed(2)) : 0,
+      couponCode: String(couponCode || '').trim().toUpperCase(),
       total: parseFloat(total.toFixed(2)),
       status: 'pending',
       whatsappSent: false,
