@@ -1,0 +1,155 @@
+[
+  {
+    "id": "creatina-max-300g",
+    "name": "Creatina Max Titanium 300g",
+    "slug": "creatina-max-titanium-300g",
+    "description": "Creatina monohidratada de alta qualidade da Max Titanium. Aumenta a força muscular, melhora o desempenho nos treinos e acelera a recuperação. Produto 100% puro e testado.",
+    "weight": "300g",
+    "price": 59.99,
+    "oldPrice": 119.99,
+    "discount": "40%",
+    "images": [
+      "images/painelgaak.png",
+      "images/painelgaak.png",
+      "images/painelgaak.png"
+    ],
+    "benefits": [
+      "Aumento da força muscular",
+      "Melhoria do desempenho",
+      "Aumento da massa muscular",
+      "Redução do tempo de recuperação",
+      "Melhora da resistência física",
+      "Aumento da produção de energia",
+      "Redução da dor muscular",
+      "Melhoria da função cerebral",
+      "Redução do risco de lesões",
+      "Segurança e eficácia comprovada"
+    ],
+    "category": "creatina",
+    "inStock": true
+  },
+  {
+    "id": "whey-protein-900g",
+    "name": "Whey Protein Max Titanium 900g",
+    "slug": "whey-protein-max-titanium-900g",
+    "description": "Whey Protein concentrado de alta qualidade com rápida absorção. Rico em aminoácidos essenciais, ideal para ganho de massa muscular e recuperação pós-treino.",
+    "weight": "900g",
+    "price": 49.99,
+    "oldPrice": 74.99,
+    "discount": "30%",
+    "images": [
+      "images/painelgaak.png",
+      "images/painelgaak.png",
+      "images/painelgaak.png"
+    ],
+    "benefits": [
+      "Aumento da síntese proteica",
+      "Recuperação muscular",
+      "Aumento da massa muscular",
+      "Melhora do desempenho",
+      "Controle do apetite",
+      "Forte em aminoácidos essenciais",
+      "Rápida absorção",
+      "Melhoria da saúde imunológica",
+      "Redução de perda de massa muscular",
+      "Versatilidade de uso"
+    ],
+    "category": "proteina",
+    "inStock": true
+  },
+  {
+    "id": "pre-workout-300g",
+    "name": "Pré-Workout Max Titanium 300g",
+    "slug": "pre-workout-max-titanium-300g",
+    "description": "Pré-treino completo com cafeína, beta-alanina e arginina. Proporciona energia explosiva, foco mental e resistência para treinos intensos.",
+    "weight": "300g",
+    "price": 139.90,
+    "oldPrice": 149.99,
+    "discount": "10%",
+    "images": [
+      "images/painelgaak.png",
+      "images/painelgaak.png",
+      "images/painelgaak.png"
+    ],
+    "benefits": [
+      "Aumento da energia e foco",
+      "Melhora do desempenho",
+      "Aumento da força e potência",
+      "Melhora da concentração",
+      "Aumento da resistência",
+      "Melhora da circulação sanguínea",
+      "Redução da dor e inflamação",
+      "Aumento da motivação",
+      "Melhora da função cognitiva",
+      "Aumento da performance"
+    ],
+    "category": "pre-treino",
+    "inStock": true
+  },
+  {
+    "id": "bcaa-200g",
+    "name": "BCAA 2:1:1 200g",
+    "slug": "bcaa-211-200g",
+    "description": "Aminoácidos de cadeia ramificada na proporção ideal 2:1:1. Reduz fadiga muscular, acelera recuperação e protege a massa magra durante treinos intensos.",
+    "weight": "200g",
+    "price": 76.90,
+    "oldPrice": 89.99,
+    "discount": "15%",
+    "images": [
+      "images/painelgaak.png",
+      "images/painelgaak.png",
+      "images/painelgaak.png"
+    ],
+    "benefits": [
+      "Menos fadiga muscular",
+      "Recuperação acelerada",
+      "Proteção da massa magra"
+    ],
+    "category": "aminoacidos",
+    "inStock": true
+  },
+  {
+    "id": "glutamina-300g",
+    "name": "Glutamina 300g",
+    "slug": "glutamina-300g",
+    "description": "L-Glutamina pura para suporte imunológico e recuperação muscular. Aminoácido mais abundante no corpo, essencial para atletas de alta performance.",
+    "weight": "300g",
+    "price": 79.90,
+    "oldPrice": 99.99,
+    "discount": "20%",
+    "images": [
+      "images/painelgaak.png",
+      "images/painelgaak.png",
+      "images/painelgaak.png"
+    ],
+    "benefits": [
+      "Suporte imunológico",
+      "Recuperação muscular",
+      "Menos catabolismo"
+    ],
+    "category": "aminoacidos",
+    "inStock": true
+  },
+  {
+    "id": "hipercalorico-3kg",
+    "name": "Hipercalórico 3kg",
+    "slug": "hipercalorico-3kg",
+    "description": "Hipercalórico de alta densidade energética para ganho de massa rápido. Combinação de proteínas, carboidratos e vitaminas para quem tem dificuldade em ganhar peso.",
+    "weight": "3kg",
+    "price": 109.90,
+    "oldPrice": 149.99,
+    "discount": "25%",
+    "images": [
+      "images/painelgaak.png",
+      "images/painelgaak.png",
+      "images/painelgaak.png"
+    ],
+    "benefits": [
+      "Ganho de massa rápido",
+      "Alta densidade calórica",
+      "Mais energia no dia a dia"
+    ],
+    "category": "hipercalorico",
+    "inStock": true
+  }
+]

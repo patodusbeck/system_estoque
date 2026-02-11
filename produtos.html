@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
@@ -28,6 +28,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&amp;family=Poppins:wght@500;600;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/modal.css">
     <title>Todos os Produtos | GAAK SUPLEMENTOS</title>
 </head>
 
@@ -59,7 +60,7 @@
     <h3 class="subheadline-pricing-card">QUALIDADE, PROCEDÊNCIA E OS MENORES PREÇOS</h3>
 
     <div class="container-price produtos-grid" id="todos-produtos">
-        <section class="price-card">
+        <section class="price-card" data-product-id="creatina-max-300g">
             <h1 class="card-title-price">
                 <img src="images/painelgaak.png" alt="Creatina" class="title-image">
             </h1>
@@ -74,10 +75,10 @@
             </ul>
             <p class="price-text">DE <span class="old-price">119,99</span> POR APENAS:</p>
             <p class="new-price">R$59,99</p>
-            <a href="index.html#pricing" class="buy-button">COMPRAR COM DESCONTO</a>
+            <button class="buy-button" onclick="openProductModal('creatina-max-300g')">VER DETALHES</button>
         </section>
 
-        <section class="price-card">
+        <section class="price-card" data-product-id="whey-protein-900g">
             <h1 class="card-title-price">
                 <img src="images/painelgaak.png" alt="Whey Protein" class="title-image">
             </h1>
@@ -92,10 +93,10 @@
             </ul>
             <p class="price-text">DE <span class="old-price">74,99</span> POR APENAS:</p>
             <p class="new-price">R$49,99</p>
-            <a href="index.html#pricing" class="buy-button">COMPRAR COM DESCONTO</a>
+            <button class="buy-button" onclick="openProductModal('whey-protein-900g')">VER DETALHES</button>
         </section>
 
-        <section class="price-card">
+        <section class="price-card" data-product-id="pre-workout-300g">
             <h1 class="card-title-price">
                 <img src="images/painelgaak.png" alt="Pré-Treino" class="title-image">
             </h1>
@@ -110,10 +111,10 @@
             </ul>
             <p class="price-text">DE <span class="old-price">149,99</span> POR APENAS:</p>
             <p class="new-price">R$139,90</p>
-            <a href="index.html#pricing" class="buy-button">COMPRAR COM DESCONTO</a>
+            <button class="buy-button" onclick="openProductModal('pre-workout-300g')">VER DETALHES</button>
         </section>
 
-        <section class="price-card">
+        <section class="price-card" data-product-id="bcaa-200g">
             <h1 class="card-title-price">
                 <img src="images/painelgaak.png" alt="BCAA" class="title-image">
             </h1>
@@ -128,10 +129,10 @@
             </ul>
             <p class="price-text">DE <span class="old-price">89,99</span> POR APENAS:</p>
             <p class="new-price">R$76,90</p>
-            <a href="index.html#pricing" class="buy-button">COMPRAR COM DESCONTO</a>
+            <button class="buy-button" onclick="openProductModal('bcaa-200g')">VER DETALHES</button>
         </section>
 
-        <section class="price-card">
+        <section class="price-card" data-product-id="glutamina-300g">
             <h1 class="card-title-price">
                 <img src="images/painelgaak.png" alt="Glutamina" class="title-image">
             </h1>
@@ -146,10 +147,10 @@
             </ul>
             <p class="price-text">DE <span class="old-price">99,99</span> POR APENAS:</p>
             <p class="new-price">R$79,90</p>
-            <a href="index.html#pricing" class="buy-button">COMPRAR COM DESCONTO</a>
+            <button class="buy-button" onclick="openProductModal('glutamina-300g')">VER DETALHES</button>
         </section>
 
-        <section class="price-card">
+        <section class="price-card" data-product-id="hipercalorico-3kg">
             <h1 class="card-title-price">
                 <img src="images/painelgaak.png" alt="Hipercalórico" class="title-image">
             </h1>
@@ -164,7 +165,7 @@
             </ul>
             <p class="price-text">DE <span class="old-price">149,99</span> POR APENAS:</p>
             <p class="new-price">R$109,90</p>
-            <a href="index.html#pricing" class="buy-button">COMPRAR COM DESCONTO</a>
+            <button class="buy-button" onclick="openProductModal('hipercalorico-3kg')">VER DETALHES</button>
         </section>
     </div>
 
@@ -177,14 +178,25 @@
 
     <footer class="footer">
         <div class="container">
-            <p>© 2025 GAAK SUPLEMENTOS – Todos os Direitos Reservados</p>
+            <p>© 2026 GAAK SUPLEMENTOS – Todos os Direitos Reservados</p>
             <div class="social-media">
                 <a href="https://instagram.com/gaak_suplementos/" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a>
-                <a href="index.html" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="https://instagram.com/gaak_suplementos/" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                <a href="https://instagram.com/gaak_suplementos/" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
             </div>
         </div>
     </footer>
+
+    <!-- Cart Icon -->
+    <div class="cart-icon" onclick="openCart()">
+        <ion-icon name="cart-outline"></ion-icon>
+        <span class="cart-count">0</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/cart.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/checkout.js"></script>
 
     <script>
         function formatDate(date) {
@@ -201,3 +213,4 @@
     </script>
 </body>
 </html>
+

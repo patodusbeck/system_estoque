@@ -142,42 +142,6 @@ var swiper = new Swiper('.swiper-container', {
     });
 });
 
-const names = [
-    "Matheus", "Carlos Eduardo", "Maria Eduarda", "João Paulo", "Lucas", "Gabriela", 
-    "Fernando", "Beatriz", "Paulo", "Rafael", "Bruno", "Diego", "Vinícius", 
-    "Ricardo", "Gustavo", "Henrique", "Eduardo", "Tiago", "Rodrigo"
-];
-const plans = ["WHEY-PROTEIN", "CREATINA", "PRÉ-WORKOUT"];
-
-function generateNotification() {
-    const name = names[Math.floor(Math.random() * names.length)];
-    const plan = plans[Math.floor(Math.random() * plans.length)];
-    const container = document.querySelector('.notification-container');
-    
-    
-    const notification = document.createElement('div');
-    notification.classList.add('notification');
-    notification.innerHTML = `
-        <ion-icon name="checkmark-circle-outline"></ion-icon>
-        <span class="notification-text">${name.toUpperCase()} COMPROU SUPLEMENTO ${plan}</span>
-    `;
-    
-    
-    container.appendChild(notification);
-
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 5000);
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(generateNotification, Math.random() * (120000) + 3000);
-    setInterval(generateNotification, 120000);
-});
-
-
 // Gera um valor inicial aleatório 
 let currentViewerCount = Math.floor(Math.random() * (1 - 2 + 1)) + 1;
 
