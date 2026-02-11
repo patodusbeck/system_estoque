@@ -338,6 +338,10 @@ function fillFormData(item, fields) {
             // Se for select de objeto, pega o ID
             let val = item[field.name];
             if (val && typeof val === 'object' && val._id) val = val._id;
+            if (field.name === 'img' && typeof val === 'string' && val.startsWith('data:image/')) {
+                val = '';
+                el.placeholder = 'Imagem da galeria já cadastrada';
+            }
             el.value = val || '';
         }
     });

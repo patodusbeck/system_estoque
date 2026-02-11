@@ -213,6 +213,7 @@ async function submitOrder(event) {
 
   // Save order in background without blocking WhatsApp opening
   saveOrderBestEffort(orderData);
+  registerClientBestEffort(customer);
 
   // Update button and continue immediately to WhatsApp
   submitBtn.innerHTML = '<ion-icon name="logo-whatsapp"></ion-icon> ABRINDO WHATSAPP...';
@@ -312,5 +313,39 @@ function saveOrderBestEffort(orderData) {
     keepalive: true
   }).catch((error) => {
     console.error('Error saving order in background:', error);
+  });
+}
+
+/**
+ * Register or update customer in clients collection (dashboard)
+ */
+function registerClientBestEffort(customer) {
+  const address = customer?.address || {};
+  const addressText = [
+    `${address.street || ''}, ${address.number || ''}`.trim().replace(/^,\s*/, ''),
+    address.complement || '',
+    address.neighborhood || '',
+    `${address.city || ''} - ${address.state || ''}`.trim().replace(/^-\s*/, ''),
+    address.zipCode ? `CEP: ${address.zipCode}` : ''
+  ].filter(Boolean).join(' | ');
+
+  const payload = {
+    nome: customer?.name?.trim() || '',
+    telefone: customer?.phone?.trim() || '',
+    endereco: addressText,
+    email: ''
+  };
+
+  if (!payload.nome) return;
+
+  fetch('/api/clients', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload),
+    keepalive: true
+  }).catch((error) => {
+    console.error('Error registering client in background:', error);
   });
 }

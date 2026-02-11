@@ -642,6 +642,9 @@ body {
     display: none;
     align-items: center;
     justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .crud-modal.active {
@@ -660,12 +663,13 @@ body {
     background: var(--branco);
     width: 95%;
     max-width: 500px;
-    max-height: 90vh;
+    max-height: calc(100dvh - 32px);
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
     animation: modalSlideIn 0.3s ease;
+    overflow: hidden;
 }
 
 @keyframes modalSlideIn {
@@ -718,6 +722,9 @@ body {
     padding: 24px;
     overflow-y: auto;
     flex: 1;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 .crud-modal-footer {
@@ -728,6 +735,9 @@ body {
     border-top: 1px solid var(--cinza-borda);
     background: var(--cinza-bg);
     border-radius: 0 0 16px 16px;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
 }
 
 /* FORMULÁRIO */
@@ -1122,6 +1132,30 @@ body {
     .stat-number {
         min-width: 100px;
         display: inline-block;
+    }
+
+    .crud-modal {
+        align-items: flex-start;
+        padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px calc(env(safe-area-inset-bottom, 0px) + 10px);
+    }
+
+    .crud-modal-content {
+        width: 100%;
+        max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 20px);
+        border-radius: 12px;
+    }
+
+    .crud-modal-header {
+        padding: 14px 16px;
+    }
+
+    .crud-modal-body {
+        padding: 14px 16px;
+    }
+
+    .crud-modal-footer {
+        padding: 12px 16px;
+        gap: 10px;
     }
 }
 
