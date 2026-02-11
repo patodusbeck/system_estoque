@@ -29,11 +29,7 @@ async function loadProductsGrid() {
 function renderProductCard(product) {
   const id = escapeHtml(product._id || '');
   const nome = escapeHtml(product.nome || 'Produto');
-  const image = escapeHtml(
-    (Array.isArray(product.images) && product.images[0]) ||
-      product.img ||
-      'images/painelgaak.png'
-  );
+  const image = 'images/gaaklogo.png';
   const estoque = Number(product.estoque || 0);
   const inStock = product.inStock ?? estoque > 0;
   const preco = Number(product.preco || 0);

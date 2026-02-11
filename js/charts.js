@@ -1,12 +1,12 @@
-/* ========================================
-   GAAK Suplementos - GRÁFICOS DO DASHBOARD
+﻿/* ========================================
+   GAAK Suplementos - GRÃFICOS DO DASHBOARD
    Integrado com dados reais da API
    ======================================== */
 
-// ========== CONFIGURAÇÃO DE CORES ==========
+// ========== CONFIGURAÃ‡ÃƒO DE CORES ==========
 const CHART_COLORS = {
-    verde: '#0f7a3a',
-    verdeClaro: '#14a94f',
+    verde: '#b30018',
+    verdeClaro: '#ff2b3f',
     azul: '#2196F3',
     laranja: '#FF9800',
     vermelho: '#dc3545',
@@ -16,7 +16,7 @@ const CHART_COLORS = {
     branco: '#ffffff'
 };
 
-// ========== INSTÂNCIAS DOS GRÁFICOS ==========
+// ========== INSTÃ‚NCIAS DOS GRÃFICOS ==========
 let salesChart = null;
 let productsChart = null;
 let revenueChart = null;
@@ -26,7 +26,7 @@ let paymentChart = null;
 let cachedSales = [];
 let cachedProducts = [];
 
-// ========== FUNÇÕES DE BUSCA DE DADOS ==========
+// ========== FUNÃ‡Ã•ES DE BUSCA DE DADOS ==========
 
 /**
  * Busca dados da API e armazena em cache
@@ -41,13 +41,13 @@ async function fetchChartData() {
         cachedProducts = productsRes || [];
         return true;
     } catch (error) {
-        console.error('Erro ao buscar dados para gráficos:', error);
+        console.error('Erro ao buscar dados para grÃ¡ficos:', error);
         return false;
     }
 }
 
 /**
- * Agrupa vendas por período
+ * Agrupa vendas por perÃ­odo
  * @param {string} period - 'week', 'month', 'year'
  */
 function getSalesData(period) {
@@ -56,8 +56,8 @@ function getSalesData(period) {
     let data = [];
 
     if (period === 'week') {
-        // Últimos 7 dias
-        const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        // Ãšltimos 7 dias
+        const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'SÃ¡b'];
         for (let i = 6; i >= 0; i--) {
             const date = new Date(now);
             date.setDate(date.getDate() - i);
@@ -70,7 +70,7 @@ function getSalesData(period) {
             data.push(count);
         }
     } else if (period === 'month') {
-        // Últimas 4 semanas
+        // Ãšltimas 4 semanas
         for (let i = 3; i >= 0; i--) {
             const weekStart = new Date(now);
             weekStart.setDate(weekStart.getDate() - (i * 7) - 6);
@@ -85,7 +85,7 @@ function getSalesData(period) {
             data.push(count);
         }
     } else {
-        // Últimos 12 meses
+        // Ãšltimos 12 meses
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         for (let i = 11; i >= 0; i--) {
             const date = new Date(now);
@@ -105,7 +105,7 @@ function getSalesData(period) {
 }
 
 /**
- * Obtém os produtos mais vendidos
+ * ObtÃ©m os produtos mais vendidos
  */
 function getTopProductsData() {
     const productSales = {};
@@ -131,7 +131,7 @@ function getTopProductsData() {
 }
 
 /**
- * Obtém faturamento por mês
+ * ObtÃ©m faturamento por mÃªs
  */
 function getRevenueData() {
     const now = new Date();
@@ -158,7 +158,7 @@ function getRevenueData() {
 }
 
 /**
- * Obtém distribuição de formas de pagamento
+ * ObtÃ©m distribuiÃ§Ã£o de formas de pagamento
  */
 function getPaymentMethodsData() {
     const payments = { pix: 0, dinheiro: 0, debito: 0, credito: 0 };
@@ -172,7 +172,7 @@ function getPaymentMethodsData() {
     const total = Object.values(payments).reduce((a, b) => a + b, 0) || 1;
     
     return {
-        labels: ['PIX', 'Dinheiro', 'Débito', 'Crédito'],
+        labels: ['PIX', 'Dinheiro', 'DÃ©bito', 'CrÃ©dito'],
         data: [
             Math.round((payments.pix / total) * 100),
             Math.round((payments.dinheiro / total) * 100),
@@ -182,7 +182,7 @@ function getPaymentMethodsData() {
     };
 }
 
-// ========== FUNÇÕES DE CRIAÇÃO DE GRÁFICOS ==========
+// ========== FUNÃ‡Ã•ES DE CRIAÃ‡ÃƒO DE GRÃFICOS ==========
 
 function createSalesChart(period = 'month') {
     const ctx = document.getElementById('salesChart');
@@ -200,7 +200,7 @@ function createSalesChart(period = 'month') {
                 label: 'Vendas',
                 data: chartData.data,
                 borderColor: CHART_COLORS.verde,
-                backgroundColor: 'rgba(15, 122, 58, 0.1)',
+                backgroundColor: 'rgba(179, 0, 24, 0.16)',
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
@@ -247,7 +247,7 @@ function createProductsChart() {
 
     const chartData = getTopProductsData();
 
-    // Fallback se não houver dados
+    // Fallback se nÃ£o houver dados
     if (chartData.labels.length === 0) {
         chartData.labels = ['Sem vendas'];
         chartData.data = [1];
@@ -412,7 +412,7 @@ function createPaymentChart() {
 }
 
 /**
- * Inicializa todos os gráficos com dados da API
+ * Inicializa todos os grÃ¡ficos com dados da API
  */
 async function initCharts() {
     await fetchChartData();
@@ -432,11 +432,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Inicializa gráficos com delay para garantir DOM pronto
+    // Inicializa grÃ¡ficos com delay para garantir DOM pronto
     setTimeout(initCharts, 100);
 });
 
-// Reinicializa gráficos quando a seção dashboard é exibida
+// Reinicializa grÃ¡ficos quando a seÃ§Ã£o dashboard Ã© exibida
 const originalNavigateToSection = window.navigateToSection;
 if (typeof originalNavigateToSection === 'function') {
     window.navigateToSection = function (sectionId) {
@@ -447,6 +447,7 @@ if (typeof originalNavigateToSection === 'function') {
     };
 }
 
-// ========== EXPORTA FUNÇÕES ==========
+// ========== EXPORTA FUNÃ‡Ã•ES ==========
 window.initCharts = initCharts;
 window.createSalesChart = createSalesChart;
+
