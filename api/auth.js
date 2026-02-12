@@ -4,7 +4,7 @@ import { connectDB, User } from './_shared/db.js';
 async function seedAdmin() {
     const adminExists = await User.findOne({ username: 'admin' });
     if (!adminExists) {
-        const hashedPassword = await bcrypt.hash('admin@espetaria', 10);
+        const hashedPassword = await bcrypt.hash('admin@azrael', 10);
         await User.create({
             username: 'admin',
             password: hashedPassword,
