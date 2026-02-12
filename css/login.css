@@ -2,6 +2,8 @@
    GAAK SUPLEMENTOS - ESTILOS DA PÁGINA DE LOGIN
    ======================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,36 +11,45 @@
 }
 
 :root {
-    --verde-escuro: #b30018;
-    --verde-claro: #ff0019;
-    --branco: #000000ff;
-    --cinza-bg: #000000;
-    --cinza-texto: #666666;
-    --preto: #333333;
-    --vermelho: #dc3545;
+    --brand-900: #4a0b14;
+    --brand-700: #b3132d;
+    --brand-500: #e53b2f;
+    --accent-500: #ff9f1a;
+    --bg-900: #0b0b0d;
+    --bg-800: #121216;
+    --surface-0: #f7f3ee;
+    --surface-1: #ffffff;
+    --text-900: #1c1618;
+    --text-600: #6b6468;
+    --border-300: #e6ded8;
+    --danger-500: #dc3545;
 }
 
 body {
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-family: 'Poppins', 'Segoe UI', Arial, Helvetica, sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--verde-escuro), #000000);
+    background:
+        radial-gradient(900px 500px at 15% 10%, rgba(229, 59, 47, 0.25), transparent 60%),
+        radial-gradient(700px 400px at 85% 20%, rgba(255, 159, 26, 0.2), transparent 55%),
+        linear-gradient(160deg, var(--bg-800), var(--bg-900));
+    color: var(--surface-0);
 }
 
 .login-container {
-    background: var(--branco);
+    background: var(--surface-1);
     width: 100%;
     max-width: 400px;
     margin: 20px;
     border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     overflow: hidden;
 }
 
 .login-header {
-    background: var(--verde-escuro);
+    background: linear-gradient(135deg, var(--brand-700), var(--brand-900));
     padding: 30px;
     text-align: center;
 }
@@ -48,11 +59,11 @@ body {
     height: 80px;
     border-radius: 50%;
     margin-bottom: 15px;
-    border: 3px solid var(--branco);
+    border: 3px solid rgba(255, 255, 255, 0.7);
 }
 
 .login-header h1 {
-    color: var(--branco);
+    color: #ffffff;
     font-size: 22px;
     font-weight: 600;
 }
@@ -74,7 +85,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: var(--preto);
+    color: var(--text-900);
     font-weight: 500;
     font-size: 14px;
 }
@@ -88,25 +99,28 @@ body {
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--cinza-texto);
+    color: var(--text-600);
 }
 
 .input-wrapper input {
     width: 100%;
     padding: 14px 14px 14px 44px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-300);
     border-radius: 10px;
     font-size: 15px;
-    transition: border-color 0.2s ease;
+    background: var(--surface-0);
+    color: var(--text-900);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-wrapper input:focus {
     outline: none;
-    border-color: var(--verde-escuro);
+    border-color: var(--brand-700);
+    box-shadow: 0 0 0 4px rgba(227, 59, 47, 0.18);
 }
 
 .input-wrapper input::placeholder {
-    color: #aaa;
+    color: #a99ea6;
 }
 
 .password-toggle {
@@ -116,7 +130,7 @@ body {
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--cinza-texto);
+    color: var(--text-600);
     cursor: pointer;
 }
 
@@ -132,12 +146,12 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--cinza-texto);
+    color: var(--text-600);
     cursor: pointer;
 }
 
 .remember-forgot a {
-    color: var(--verde-escuro);
+    color: var(--brand-700);
     text-decoration: none;
 }
 
@@ -148,14 +162,14 @@ body {
 .btn-login {
     width: 100%;
     padding: 14px;
-    background: var(--verde-escuro);
-    color: var(--branco);
+    background: linear-gradient(135deg, var(--brand-700), var(--brand-500));
+    color: #ffffff;
     border: none;
     border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,7 +177,8 @@ body {
 }
 
 .btn-login:hover {
-    background: var(--verde-claro);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(179, 19, 45, 0.35);
 }
 
 .btn-login:disabled {
@@ -175,7 +190,7 @@ body {
     display: none;
     width: 20px;
     height: 20px;
-    border: 2px solid var(--branco);
+    border: 2px solid #ffffff;
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -196,8 +211,8 @@ body {
 }
 
 .error-message {
-    background: #f8d7da;
-    color: var(--vermelho);
+    background: #fbe7ea;
+    color: var(--danger-500);
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -214,11 +229,11 @@ body {
 .login-footer {
     text-align: center;
     padding: 20px 30px 30px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--border-300);
 }
 
 .login-footer a {
-    color: var(--verde-escuro);
+    color: var(--brand-700);
     text-decoration: none;
     font-size: 14px;
 }
@@ -229,8 +244,8 @@ body {
 
 /* Demo credentials box */
 .demo-credentials {
-    background: #2a0a0d;
-    border: 1px solid #5a141a;
+    background: #fff2e6;
+    border: 1px solid #ffd9b3;
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 20px;
@@ -238,16 +253,14 @@ body {
 }
 
 .demo-credentials strong {
-    color: var(--verde-escuro);
+    color: var(--brand-700);
     display: block;
     margin-bottom: 5px;
 }
 
 .demo-credentials code {
-    background: var(--branco);
+    background: #ffffff;
     padding: 2px 6px;
     border-radius: 4px;
     font-family: monospace;
 }
-
-
