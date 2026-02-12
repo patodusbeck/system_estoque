@@ -1,9 +1,9 @@
 ﻿/* ========================================
-   GAAK Suplementos - GRÃFICOS DO DASHBOARD
+   GAAK Suplementos - GRÁFICOS DO DASHBOARD
    Integrado com dados reais da API
    ======================================== */
 
-// ========== CONFIGURAÃ‡ÃƒO DE CORES ==========
+// ========== CONFIGURAÇÃO DE CORES ==========
 const CHART_COLORS = {
     verde: '#d10000',
     verdeClaro: '#ff0000',
@@ -16,7 +16,7 @@ const CHART_COLORS = {
     branco: '#ffffff'
 };
 
-// ========== INSTÃ‚NCIAS DOS GRÃFICOS ==========
+// ========== INSTÂNCIAS DOS GRÁFICOS ==========
 let salesChart = null;
 let productsChart = null;
 let revenueChart = null;
@@ -26,7 +26,7 @@ let paymentChart = null;
 let cachedSales = [];
 let cachedProducts = [];
 
-// ========== FUNÃ‡Ã•ES DE BUSCA DE DADOS ==========
+// ========== FUNÇÕES DE BUSCA DE DADOS ==========
 
 /**
  * Busca dados da API e armazena em cache
@@ -41,13 +41,13 @@ async function fetchChartData() {
         cachedProducts = productsRes || [];
         return true;
     } catch (error) {
-        console.error('Erro ao buscar dados para grÃ¡ficos:', error);
+        console.error('Erro ao buscar dados para gráficos:', error);
         return false;
     }
 }
 
 /**
- * Agrupa vendas por perÃ­odo
+ * Agrupa vendas por período
  * @param {string} period - 'week', 'month', 'year'
  */
 function getSalesData(period) {
@@ -56,7 +56,7 @@ function getSalesData(period) {
     let data = [];
 
     if (period === 'week') {
-        // Ãšltimos 7 dias
+        // Últimos 7 dias
         const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
         for (let i = 6; i >= 0; i--) {
             const date = new Date(now);
@@ -70,7 +70,7 @@ function getSalesData(period) {
             data.push(count);
         }
     } else if (period === 'month') {
-        // Ãšltimas 4 semanas
+        // Últimas 4 semanas
         for (let i = 3; i >= 0; i--) {
             const weekStart = new Date(now);
             weekStart.setDate(weekStart.getDate() - (i * 7) - 6);
@@ -85,7 +85,7 @@ function getSalesData(period) {
             data.push(count);
         }
     } else {
-        // Ãšltimos 12 meses
+        // Últimos 12 meses
         const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         for (let i = 11; i >= 0; i--) {
             const date = new Date(now);
@@ -105,7 +105,7 @@ function getSalesData(period) {
 }
 
 /**
- * ObtÃ©m os produtos mais vendidos
+ * Obtém os produtos mais vendidos
  */
 function getTopProductsData() {
     const productSales = {};
@@ -131,7 +131,7 @@ function getTopProductsData() {
 }
 
 /**
- * ObtÃ©m faturamento por mÃªs
+ * Obtém faturamento por mês
  */
 function getRevenueData() {
     const now = new Date();
@@ -158,7 +158,7 @@ function getRevenueData() {
 }
 
 /**
- * ObtÃ©m distribuiÃ§Ã£o de formas de pagamento
+ * Obtém distribuição de formas de pagamento
  */
 function getPaymentMethodsData() {
     const payments = { pix: 0, dinheiro: 0, debito: 0, credito: 0 };
@@ -182,7 +182,7 @@ function getPaymentMethodsData() {
     };
 }
 
-// ========== FUNÃ‡Ã•ES DE CRIAÃ‡ÃƒO DE GRÃFICOS ==========
+// ========== FUNÇÕES DE CRIAÇÃO DE GRÁFICOS ==========
 
 function createSalesChart(period = 'month') {
     const ctx = document.getElementById('salesChart');
@@ -247,7 +247,7 @@ function createProductsChart() {
 
     const chartData = getTopProductsData();
 
-    // Fallback se nÃ£o houver dados
+    // Fallback se não houver dados
     if (chartData.labels.length === 0) {
         chartData.labels = ['Sem vendas'];
         chartData.data = [1];
@@ -412,7 +412,7 @@ function createPaymentChart() {
 }
 
 /**
- * Inicializa todos os grÃ¡ficos com dados da API
+ * Inicializa todos os gráficos com dados da API
  */
 async function initCharts() {
     await fetchChartData();
@@ -432,11 +432,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Inicializa grÃ¡ficos com delay para garantir DOM pronto
+    // Inicializa gráficos com delay para garantir DOM pronto
     setTimeout(initCharts, 100);
 });
 
-// Reinicializa grÃ¡ficos quando a seÃ§Ã£o dashboard Ã© exibida
+// Reinicializa gráficos quando a seção dashboard é exibida
 const originalNavigateToSection = window.navigateToSection;
 if (typeof originalNavigateToSection === 'function') {
     window.navigateToSection = function (sectionId) {
@@ -447,7 +447,8 @@ if (typeof originalNavigateToSection === 'function') {
     };
 }
 
-// ========== EXPORTA FUNÃ‡Ã•ES ==========
+// ========== EXPORTA FUNÇÕES ==========
 window.initCharts = initCharts;
 window.createSalesChart = createSalesChart;
+
 

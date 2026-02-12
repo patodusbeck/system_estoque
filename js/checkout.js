@@ -128,7 +128,7 @@ function openCheckoutModal() {
             <h3>Cupom (opcional)</h3>
             <div class="form-row">
               <div class="form-group" style="flex: 2;">
-                <label for="coupon-code">Codigo do cupom</label>
+                <label for="coupon-code">Código do cupom</label>
                 <input type="text" id="coupon-code" name="couponCodeInput" placeholder="Ex: GAAK25" autocomplete="off" style="text-transform: uppercase;">
               </div>
               <div class="form-group" style="flex: 1; align-self: end;">
@@ -293,7 +293,7 @@ async function submitOrder(event) {
     redirectToWhatsApp(orderData);
   } catch (error) {
     console.error('Error syncing order:', error);
-    alert(`Nao foi possivel sincronizar o pedido: ${error.message}\n\nTente novamente.`);
+    alert(`Não foi possível sincronizar o pedido: ${error.message}\n\nTente novamente.`);
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<ion-icon name="checkmark-circle"></ion-icon> CONFIRMAR PEDIDO';
   }
@@ -425,7 +425,7 @@ async function applyCouponFromCheckout() {
     const response = await fetch(`/api/coupons?validate=true&code=${encodeURIComponent(code)}`);
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.valid) {
-      throw new Error(result.error || 'Cupom invalido');
+      throw new Error(result.error || 'Cupom inválido');
     }
 
     appliedCoupon = {
@@ -437,7 +437,7 @@ async function applyCouponFromCheckout() {
   } catch (error) {
     appliedCoupon = null;
     updateCheckoutSummaryUI();
-    alert(`Nao foi possivel aplicar o cupom: ${error.message}`);
+    alert(`Não foi possível aplicar o cupom: ${error.message}`);
   }
 }
 

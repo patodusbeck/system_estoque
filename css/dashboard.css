@@ -2,7 +2,7 @@
    GAAK SUPLEMENTOS - DASHBOARD STYLES
    ======================================== */
 
-/* ---------- RESET & VARIÃVEIS ---------- */
+/* ---------- RESET & VARIÁVEIS ---------- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -65,7 +65,7 @@ body {
     font-weight: 600;
 }
 
-/* NAVEGAÃ‡ÃƒO */
+/* NAVEGAÇÃO */
 .sidebar-nav {
     flex: 1;
     padding: 20px 0;
@@ -107,7 +107,7 @@ body {
 }
 
 /* ========================================
-   CONTEÃšDO PRINCIPAL
+   CONTEÚDO PRINCIPAL
    ======================================== */
 
 .main-content {
@@ -118,7 +118,7 @@ body {
     overflow-x: hidden;
 }
 
-/* HEADER DO CONTEÃšDO */
+/* HEADER DO CONTEÚDO */
 .content-header {
     display: flex;
     align-items: center;
@@ -185,7 +185,7 @@ body {
 }
 
 /* ========================================
-   SEÃ‡Ã•ES DE CONTEÃšDO
+   SEÇÕES DE CONTEÚDO
    ======================================== */
 
 .content-section {
@@ -198,7 +198,7 @@ body {
     display: block;
 }
 
-/* CARDS DE ESTATÃSTICAS */
+/* CARDS DE ESTATÍSTICAS */
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -241,7 +241,7 @@ body {
     color: var(--preto);
 }
 
-/* CARD DE CONTEÃšDO */
+/* CARD DE CONTEÚDO */
 .content-card {
     background: #101010;
     border-radius: 12px;
@@ -306,7 +306,7 @@ body {
 }
 
 /* ========================================
-   GRÃFICOS
+   GRÁFICOS
    ======================================== */
 
 .charts-grid {
@@ -390,7 +390,7 @@ body {
 }
 
 /* ========================================
-   CONTROLES DE TABELA (Busca, Filtros, PaginaÃ§Ã£o)
+   CONTROLES DE TABELA (Busca, Filtros, Paginação)
    ======================================== */
 
 .table-controls {
@@ -463,7 +463,7 @@ body {
     border-color: var(--verde-escuro);
 }
 
-/* CABEÃ‡ALHOS ORDENÃVEIS */
+/* CABEÇALHOS ORDENÁVEIS */
 .data-table th.sortable {
     cursor: pointer;
     user-select: none;
@@ -499,7 +499,7 @@ body {
     color: #ddd;
 }
 
-/* PAGINAÃ‡ÃƒO */
+/* PAGINAÇÃO */
 .table-pagination {
     display: flex;
     justify-content: space-between;
@@ -561,7 +561,7 @@ body {
 }
 
 /* ========================================
-   BOTÃ•ES
+   BOTÕES
    ======================================== */
 
 .btn-primary {
@@ -646,6 +646,8 @@ body {
     padding: 16px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    height: 100%;
+    touch-action: pan-y;
 }
 
 .crud-modal.active {
@@ -664,6 +666,8 @@ body {
     background: #101010;
     width: 95%;
     max-width: 500px;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100svh - 32px);
     max-height: calc(100dvh - 32px);
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -671,6 +675,13 @@ body {
     flex-direction: column;
     animation: modalSlideIn 0.3s ease;
     overflow: hidden;
+}
+
+.crud-modal-content form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
 }
 
 @keyframes modalSlideIn {
@@ -726,6 +737,7 @@ body {
     min-height: 0;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    touch-action: pan-y;
 }
 
 .crud-modal-footer {
@@ -741,7 +753,7 @@ body {
     z-index: 2;
 }
 
-/* FORMULÃRIO */
+/* FORMULÁRIO */
 .form-group {
     margin-bottom: 20px;
 }
@@ -818,7 +830,7 @@ body {
     display: block;
 }
 
-/* BOTÃ•ES DO MODAL */
+/* BOTÕES DO MODAL */
 .btn-cancel {
     background: var(--cinza-bg);
     color: var(--cinza-texto);
@@ -910,7 +922,7 @@ body {
 }
 
 /* ========================================
-   NOTIFICAÃ‡Ã•ES
+   NOTIFICAÇÕES
    ======================================== */
 
 .notification {
@@ -1065,13 +1077,14 @@ body {
 
     .data-table tbody td {
         display: flex;
+        flex-direction: column;
         align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
+        justify-content: flex-start;
+        gap: 6px;
         width: 100%;
         padding: 8px 0;
         border-bottom: 1px dashed #d8d8d8;
-        text-align: right;
+        text-align: left;
         word-break: break-word;
     }
 
@@ -1081,23 +1094,28 @@ body {
 
     .data-table tbody td::before {
         content: attr(data-label);
-        color: var(--preto);
+        color: var(--cinza-texto);
         font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
         text-align: left;
-        flex: 0 0 42%;
-        max-width: 42%;
+        flex: none;
+        max-width: none;
     }
 
     .data-table tbody td.actions-cell {
+        flex-direction: row;
         align-items: center;
+        gap: 8px;
     }
 
     .data-table tbody td.actions-cell::before {
-        padding-top: 6px;
+        padding-top: 0;
     }
 
     .data-table tbody td.actions-cell button {
-        margin-left: 6px;
+        margin-left: 0;
     }
 
     .data-table tbody td.status-cell {
@@ -1142,6 +1160,8 @@ body {
 
     .crud-modal-content {
         width: 100%;
+        max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 20px);
+        max-height: calc(100svh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 20px);
         max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 20px);
         border-radius: 12px;
     }
@@ -1178,4 +1198,5 @@ body {
 .sidebar-overlay.active {
     display: block;
 }
+
 

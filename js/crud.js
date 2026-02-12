@@ -3,7 +3,7 @@
    Create, Read, Update, Delete via Backend
    ======================================== */
 
-// ========== CONFIGURAÃ‡ÃƒO DE FORMULÃRIOS ==========
+// ========== CONFIGURAÇÃO DE FORMULÁRIOS ==========
 const FORM_CONFIG = {
     client: { // Alterado de 'cliente' para 'client' para bater com API ou manter mapeamento
         title: 'Cliente',
@@ -12,7 +12,7 @@ const FORM_CONFIG = {
             { name: 'nome', label: 'Nome Completo', type: 'text', required: true, placeholder: 'Digite o nome do cliente' },
             { name: 'telefone', label: 'Telefone', type: 'tel', required: true, placeholder: '(99) 99999-9999' },
             { name: 'email', label: 'E-mail', type: 'email', required: false, placeholder: 'email@exemplo.com' },
-            { name: 'endereco', label: 'EndereÃ§o', type: 'text', required: false, placeholder: 'Rua, nÃºmero, bairro' }
+            { name: 'endereco', label: 'Endereço', type: 'text', required: false, placeholder: 'Rua, número, bairro' }
         ]
     },
     product: { // Alterado de 'produto' para 'product'
@@ -20,8 +20,8 @@ const FORM_CONFIG = {
         entity: 'products',
         fields: [
             { name: 'nome', label: 'Nome do Produto', type: 'text', required: true, placeholder: 'Ex: Espetinho de Carne' },
-            { name: 'descricao', label: 'DescriÃ§Ã£o', type: 'textarea', required: false, placeholder: 'DescriÃ§Ã£o do produto' },
-            { name: 'preco', label: 'PreÃ§o (R$)', type: 'number', required: true, placeholder: '0.00', step: '0.01', min: '0' },
+            { name: 'descricao', label: 'Descrição', type: 'textarea', required: false, placeholder: 'Descrição do produto' },
+            { name: 'preco', label: 'Preço (R$)', type: 'number', required: true, placeholder: '0.00', step: '0.01', min: '0' },
             { name: 'img', label: 'Foto (URL ou caminho)', type: 'text', required: false, placeholder: 'images/produto.jpg' },
             { name: 'imagesUpload', label: 'Fotos da Galeria', type: 'file', required: false, accept: 'image/*', multiple: true },
             { name: 'estoque', label: 'Estoque', type: 'number', required: true, placeholder: '0', min: '0' },
@@ -31,8 +31,8 @@ const FORM_CONFIG = {
         title: 'Venda',
         entity: 'sales',
         fields: [
-            { name: 'clienteId', label: 'Cliente', type: 'select', required: false, options: 'clients' }, // clienteId ao invÃ©s de cliente
-            // Data Ã© automÃ¡tica no backend
+            { name: 'clienteId', label: 'Cliente', type: 'select', required: false, options: 'clients' }, // clienteId ao invés de cliente
+            // Data é automática no backend
             { name: 'produtos', label: 'Produtos', type: 'multiselect', required: true },
             { name: 'total', label: 'Total (R$)', type: 'number', required: true, placeholder: '0.00', step: '0.01', min: '0', readonly: true },
             {
@@ -40,14 +40,14 @@ const FORM_CONFIG = {
                     { value: '', label: 'Selecione...' },
                     { value: 'pix', label: 'PIX' },
                     { value: 'dinheiro', label: 'Dinheiro' },
-                    { value: 'debito', label: 'CartÃ£o DÃ©bito' },
-                    { value: 'credito', label: 'CartÃ£o CrÃ©dito' }
+                    { value: 'debito', label: 'Cartão Débito' },
+                    { value: 'credito', label: 'Cartão Crédito' }
                 ]
             },
             {
                 name: 'status', label: 'Status', type: 'select', required: true, options: [
                     { value: 'pendente', label: 'Pendente' },
-                    { value: 'concluida', label: 'ConcluÃ­da' },
+                    { value: 'concluida', label: 'Concluída' },
                     { value: 'cancelada', label: 'Cancelada' }
                 ]
             }
@@ -57,9 +57,9 @@ const FORM_CONFIG = {
         title: 'Cupom',
         entity: 'coupons',
         fields: [
-            { name: 'code', label: 'Codigo do Cupom', type: 'text', required: true, placeholder: 'Ex: GAAK25' },
+            { name: 'code', label: 'Código do Cupom', type: 'text', required: true, placeholder: 'Ex: GAAK25' },
             { name: 'discountPercent', label: 'Desconto (%)', type: 'number', required: true, placeholder: '25', min: '1', max: '100', step: '1' },
-            { name: 'startsAt', label: 'Inicio', type: 'datetime-local', required: true },
+            { name: 'startsAt', label: 'Início', type: 'datetime-local', required: true },
             { name: 'expiresAt', label: 'Validade', type: 'datetime-local', required: true },
             {
                 name: 'active', label: 'Status', type: 'select', required: true, options: [
@@ -97,13 +97,13 @@ const API = {
     },
 
     async getOne(entity, id) {
-        // Como o backend pode nÃ£o ter rota especÃ­fica de getOne configurada para todos, 
+        // Como o backend pode não ter rota específica de getOne configurada para todos,
         // mas o mongoose findById funciona. Vamos assumir que temos o dado local ou buscar da lista
         // Ideal seria rota /api/entity/:id
-        // Para simplificar, vou buscar da lista localmente na memÃ³ria se a tabela jÃ¡ carregou,
+        // Para simplificar, vou buscar da lista localmente na memória se a tabela já carregou,
         // mas aqui vou assumir que preciso buscar da API se for editar.
         // Vou usar a rota de listagem e filtrar por enquanto, ou implementar rota de detalhe.
-        // IMPLEMENTAÃ‡ÃƒO RÃPIDA: filtrar do window.tableData se disponÃ­vel, ou rota especÃ­fica.
+        // IMPLEMENTAÇÃO RÁPIDA: filtrar do window.tableData se disponível, ou rota específica.
         const res = await fetch(`${this.baseUrl}/${entity}`);
         const list = await res.json();
         return list.find(item => item._id === id || item.id === id);
@@ -144,12 +144,12 @@ const API = {
     }
 };
 
-// ========== FUNÃ‡Ã•ES DO MODAL ==========
+// ========== FUNÇÕES DO MODAL ==========
 
 /**
  * Abre o modal
  * @param {string} entityType - cliente, produto, venda
- * @param {string} id - ID para ediÃ§Ã£o
+ * @param {string} id - ID para edição
  */
 async function openModal(entityType, id = null) {
     // Mapeia nome antigo para novo
@@ -157,7 +157,7 @@ async function openModal(entityType, id = null) {
     const config = FORM_CONFIG[mappedEntity];
 
     if (!config) {
-        console.error('Entidade nÃ£o configurada:', entityType);
+        console.error('Entidade não configurada:', entityType);
         return;
     }
 
@@ -172,17 +172,17 @@ async function openModal(entityType, id = null) {
         document.body.appendChild(modal);
     }
 
-    // TÃ­tulo
+    // Título
     const title = document.getElementById('modalTitle');
     title.innerHTML = `<i class="fa-solid fa-${currentMode === 'create' ? 'plus' : 'edit'}"></i> ${currentMode === 'create' ? 'Novo' : 'Editar'} ${config.title}`;
 
-    // Gera formulÃ¡rio
+    // Gera formulário
     const formContainer = document.getElementById('modalFormContainer');
-    // Precisamos aguardar a geraÃ§Ã£o dos campos pois pode haver fetch de options
+    // Precisamos aguardar a geração dos campos pois pode haver fetch de options
     formContainer.innerHTML = 'Carregando...';
     formContainer.innerHTML = await generateFormFields(config.fields);
 
-    // Se ediÃ§Ã£o, carrega dados
+    // Se edição, carrega dados
     if (id) {
         try {
             const item = await API.getOne(config.entity, id);
@@ -233,7 +233,7 @@ function createModalElement() {
     return modal;
 }
 
-// ========== GERADOR DE FORMULÃRIO ==========
+// ========== GERADOR DE FORMULÁRIO ==========
 
 async function generateFormFields(fields) {
     let html = '';
@@ -368,7 +368,7 @@ function fillFormData(item, fields) {
             }
             if (field.name === 'img' && typeof val === 'string' && val.startsWith('data:image/')) {
                 val = '';
-                el.placeholder = 'Imagem da galeria jÃ¡ cadastrada';
+                el.placeholder = 'Imagem da galeria já cadastrada';
             }
             el.value = val || '';
         }
@@ -468,7 +468,7 @@ async function processProductImages(form, data) {
                 const parsed = JSON.parse(existingImagesRaw);
                 if (Array.isArray(parsed)) nextImages = parsed;
             } catch (error) {
-                console.warn('NÃ£o foi possÃ­vel ler imagens existentes do produto', error);
+                console.warn('Não foi possível ler imagens existentes do produto', error);
             }
         }
     }
@@ -498,7 +498,7 @@ function sanitizeProductImageFiles(files) {
 
     limitedFiles.forEach((file) => {
         if (!ALLOWED_IMAGE_MIME_TYPES.includes(file.type)) {
-            warnings.push(`Arquivo "${file.name}" ignorado: formato invalido. Use JPG, PNG ou WEBP.`);
+            warnings.push(`Arquivo "${file.name}" ignorado: formato inválido. Use JPG, PNG ou WEBP.`);
             return;
         }
         if (file.size > MAX_IMAGE_FILE_SIZE_BYTES) {
@@ -532,12 +532,12 @@ function renderImagePreview(targetId, images) {
 
     container.innerHTML = validImages.slice(0, MAX_PRODUCT_IMAGES).map((img) => `
         <div class="image-preview-item">
-            <img src="${img}" alt="PrÃ©via da imagem do produto" loading="lazy">
+            <img src="${img}" alt="Prévia da imagem do produto" loading="lazy">
         </div>
     `).join('');
 }
 
-// ========== NOTIFICAÃ‡Ã•ES ==========
+// ========== NOTIFICAÇÕES ==========
 function showNotification(msg, type = 'info') {
     const div = document.createElement('div');
     div.className = `notification notification-${type}`;
@@ -556,7 +556,7 @@ window.deleteItem = async (type, id) => {
     const config = FORM_CONFIG[mapped];
     try {
         await API.delete(config.entity, id);
-        showNotification('Item excluÃ­do', 'success');
+        showNotification('Item excluído', 'success');
         document.dispatchEvent(new Event('dataChanged'));
     } catch (e) {
         showNotification('Erro ao excluir', 'error');

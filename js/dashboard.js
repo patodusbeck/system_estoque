@@ -1,4 +1,4 @@
-/* ========================================
+﻿/* ========================================
    GAAK Suplementos - DASHBOARD SCRIPT (DYNAMIC)
    ======================================== */
 
@@ -14,7 +14,16 @@ const TABLE_UPDATE_COOLDOWN_MS = 4000;
 let lastUserInteractionAt = Date.now();
 const tableDataSignatureBySection = {};
 
-// ========== NAVEGACAO ==========
+// ========== NAVEGAÇÃO ==========
+
+function formatDateTime(value) {
+    if (!value) return '-';
+    const dateObj = new Date(value);
+    if (Number.isNaN(dateObj.getTime())) return '-';
+    const date = dateObj.toLocaleDateString('pt-BR');
+    const time = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return `${date} ${time}`;
+}
 
 function navigateToSection(sectionId) {
     navItems.forEach(item => item.classList.remove('active'));
@@ -165,32 +174,31 @@ function renderTableRows(sectionId, data) {
                 </td>
             `;
         } else if (sectionId === 'vendas') {
-            const dateObj = new Date(item.data);
-            const date = dateObj.toLocaleDateString('pt-BR');
-            const time = dateObj.toLocaleTimeString('pt-BR');
+
             const statusClass = item.status === 'concluida' ? 'success' : item.status === 'cancelada' ? 'danger' : 'warning';
-            const clientName = item.cliente ? item.cliente.nome : (item.clienteNome || 'Balcao');
+            const clientName = item.cliente ? item.cliente.nome : (item.clienteNome || 'Balcão');
 
             row = `
                 <td data-label="ID">${item._id.substr(-6)}</td>
-                <td data-label="Data">${time} - ${date}</td>
+                <td data-label="Data">${formatDateTime(item.data)}</td>
                 <td data-label="Cliente">${clientName}</td>
                 <td data-label="Total">R$ ${item.total.toFixed(2)}</td>
                 <td data-label="Cupom">${item.couponCode || 'Não'}</td>
                 <td data-label="Status" class="status-cell"><span class="badge badge-${statusClass}">${item.status}</span></td>
             `;
         } else if (sectionId === 'cupons') {
-            const start = item.startsAt ? new Date(item.startsAt).toLocaleString('pt-BR') : '-';
-            const end = item.expiresAt ? new Date(item.expiresAt).toLocaleString('pt-BR') : '-';
+            const start = formatDateTime(item.startsAt);
+            const end = formatDateTime(item.expiresAt);
             const status = item.status || ((item.active === false) ? 'inativo' : 'ativo');
+            const statusLabel = status ? status.charAt(0).toUpperCase() + status.slice(1) : '';
             const statusClass = status === 'ativo' ? 'success' : status === 'expirado' ? 'danger' : 'warning';
             row = `
                 <td data-label="ID">${item._id.substr(-6)}</td>
-                <td data-label="Codigo">${item.code}</td>
+                <td data-label="Código">${item.code}</td>
                 <td data-label="Desconto">${Number(item.discountPercent || 0)}%</td>
-                <td data-label="Inicio">${start}</td>
+                <td data-label="Início">${start}</td>
                 <td data-label="Validade">${end}</td>
-                <td data-label="Status" class="status-cell"><span class="badge badge-${statusClass}">${status}</span></td>
+                <td data-label="Status" class="status-cell"><span class="badge badge-${statusClass}">${statusLabel}</span></td>
                 <td data-label="Ações" class="actions-cell">
                     <button class="btn-icon" onclick="editItem('coupon', '${item._id}')"><i class="fa-solid fa-edit"></i></button>
                     <button class="btn-icon btn-danger" onclick="deleteItem('coupon', '${item._id}')"><i class="fa-solid fa-trash"></i></button>
@@ -354,3 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.navigateToSection = navigateToSection;
+
+
+
+

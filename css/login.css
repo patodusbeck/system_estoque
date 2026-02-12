@@ -1,5 +1,5 @@
 ﻿/* ========================================
-   GAAK SUPLEMENTOS - ESTILOS DA PÃGINA DE LOGIN
+   GAAK SUPLEMENTOS - ESTILOS DA PÁGINA DE LOGIN
    ======================================== */
 
 * {
@@ -10,9 +10,9 @@
 
 :root {
     --verde-escuro: #b30018;
-    --verde-claro: #ff2b3f;
-    --branco: #ffffff;
-    --cinza-bg: #f5f5f5;
+    --verde-claro: #ff0019;
+    --branco: #000000ff;
+    --cinza-bg: #000000;
     --cinza-texto: #666666;
     --preto: #333333;
     --vermelho: #dc3545;
@@ -249,4 +249,5 @@ body {
     border-radius: 4px;
     font-family: monospace;
 }
+
 
